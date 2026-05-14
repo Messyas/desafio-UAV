@@ -1,0 +1,18 @@
+# Dataset bruto (versionado pelo DVC)
+data/raw/UAVIDS-2025.csv
+
+# MLflow artifacts grandes (modelos .pkl ficam fora do git)
+mlruns/
+
+# Checkpoints do Jupyter
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+
+# DVC cache
+.dvc/cache/
+.dvc/tmp/
