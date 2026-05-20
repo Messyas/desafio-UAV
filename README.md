@@ -26,8 +26,8 @@ Redes de drones (UAV) são vulneráveis a ataques como Blackhole, Flooding, Sybi
 
 - Docker Desktop (com Docker Compose)
 - Git
+- Python 3.12 (para o ambiente local de notebooks)
 - DVC (`pip install "dvc"`)
-- Python 3.10+ (apenas para rodar `src/promover.py` localmente, opcional)
 
 ---
 
@@ -49,21 +49,35 @@ Inclua a pasta `C:/dvcstore` (entregue junto no `.zip`) na raiz do seu `C:/` e e
 dvc pull
 ```
 
-> Isso restaura o arquivo `data/UAVIDS-2025.csv` a partir do remote local `C:/dvcstore`.
+> Isso restaura o arquivo `data/raw/UAVIDS-2025.csv` a partir do remote local `C:/dvcstore`.
 
-### 3. Executar os notebooks (opcional — MLflow já está pré-treinado)
+### 3. Criar o ambiente local (notebooks)
 
-Os artefatos do MLflow (`mlruns/`) e o banco de registro (`mlflow.db`) já estão incluídos no repositório com os 3 modelos treinados e o alias `@production` configurado. Não é necessário re-treinar para subir a API.
+O projeto usa um `.venv` Python 3.12 com todas as dependências para rodar os notebooks. Caso o `.venv` não exista (clone limpo), crie com:
 
-Caso queira re-treinar do zero (requer a imagem Docker NVIDIA com GPU):
-
-```bash
-# Abrir os notebooks na ordem:
-# notebooks/01_eda.ipynb      — EDA detalhada
-# notebooks/02_modelagem.ipynb — Pipeline, CV, MLflow, Registry
+```powershell
+py -3.12 -m venv .venv
+.venv\Scripts\pip install -r requirements-notebooks.txt
 ```
 
-### 4. Promover o modelo para @production (já feito, opcional re-executar)
+### 4. Abrir os notebooks no VS Code
+
+1. Abrir a pasta do projeto no VS Code
+2. Instalar a extensão **Jupyter** (Microsoft) se ainda não tiver
+3. Abrir `notebooks/01_eda.ipynb` ou `notebooks/02_modelagem.ipynb`
+4. No canto superior direito do notebook, clicar em **Select Kernel** → **Python Environments** → escolher o interpretador `.venv\Scripts\python.exe`
+5. Rodar as células normalmente (Shift+Enter ou `Run All`)
+
+Ordem sugerida:
+
+```
+notebooks/01_eda.ipynb       # EDA detalhada
+notebooks/02_modelagem.ipynb # Pipeline, CV, MLflow, Registry
+```
+
+> Os artefatos do MLflow (`mlruns/`) já estão incluídos com os modelos treinados e o alias `@production` configurado. Só re-execute se quiser re-treinar.
+
+### 5. Promover o modelo para @production (já feito, opcional re-executar)
 
 ```bash
 python src/promover.py
@@ -71,15 +85,15 @@ python src/promover.py
 
 > Atribui o alias `@production` à versão 1 do modelo `previsor_uav_ids` no MLflow Registry.
 
-### 5. Subir a API com Docker Compose
+### 6. Subir a API com Docker Compose
 
 ```bash
 docker compose up --build
 ```
 
-A API sobe na porta **8000**. Aguarde a mensagem `✓ Modelo carregado e pronto.` nos logs.
+A API sobe na porta **8000**. Aguarde a mensagem `Modelo carregado e pronto.` nos logs.
 
-### 6. Testar os endpoints
+### 7. Testar os endpoints
 
 ```bash
 # Health check
@@ -112,10 +126,10 @@ curl -X POST http://localhost:8000/predict \
 
 Documentação interativa (Swagger): **http://localhost:8000/docs**
 
-### 7. Visualizar o MLflow UI
+### 8. Visualizar o MLflow UI
 
 ```bash
-mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5002
+mlflow ui --backend-store-uri file:./mlruns --port 5002
 ```
 
 Acesse: **http://localhost:5002**

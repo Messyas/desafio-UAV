@@ -1,7 +1,7 @@
 import logging, os
 from contextlib import asynccontextmanager
+import mlflow
 import mlflow.pyfunc
-import mlflow.sklearn as mlsk
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
@@ -9,12 +9,12 @@ from pydantic import BaseModel, Field
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-MLFLOW_URI = os.getenv("MLFLOW_TRACKING_URI", "sqlite:////workspace/mlruns/mlflow.db")
+MLFLOW_URI = os.getenv("MLFLOW_TRACKING_URI", "file:./mlruns")
 MODEL_NAME = "models:/previsor_uav_ids@production"
 EPS_SMALL  = 1e-9
 EPS_HOP    = 1.0
 
-# XGBoost foi treinado com LabelEncoder — mapeia inteiros para nomes das classes
+# XGBoost foi treinado com LabelEncoder - mapeia inteiros para nomes das classes
 LABEL_MAP = {
     0: "Blackhole Attack",
     1: "Flooding Attack",
@@ -32,35 +32,18 @@ async def lifespan(app: FastAPI):
     global model
     try:
         logger.info(f"Carregando modelo via pyfunc: {MODEL_NAME}")
-        # Chamada pyfunc (requisito do projeto — verifica acesso ao Registry)
-        mlflow.pyfunc.load_model(MODEL_NAME)
-
-        # Carrega o pipeline sklearn para poder patchar o device do XGBoost
-        # (modelo foi treinado com device='cuda'; container usa somente CPU)
-        logger.info("Carregando pipeline sklearn para patch de device...")
-        pipeline = mlsk.load_model(MODEL_NAME)
-
-        clf = pipeline.named_steps.get("clf")
-        if clf is not None and hasattr(clf, "device"):
-            clf.device = "cpu"
-            try:
-                clf.get_booster().set_param({"device": "cpu"})
-                logger.info("XGBoost device alterado para CPU.")
-            except Exception as e:
-                logger.warning(f"Patch do booster falhou (ignorando): {e}")
-
-        model = pipeline
-        logger.info("✓ Modelo carregado e pronto.")
+        model = mlflow.pyfunc.load_model(MODEL_NAME)
+        logger.info("Modelo carregado e pronto.")
     except Exception as exc:
-        logger.error(f"✗ Falha ao carregar modelo: {exc}")
+        logger.error(f"Falha ao carregar modelo: {exc}")
         model = None
     yield
     model = None
 
 
 app = FastAPI(
-    title="UAVIDS-2025 — IDS para Redes UAV",
-    description="Classifica fluxos de rede de drones. Modelo: XGBoost tunado — F1-macro ≈ 0,958.",
+    title="UAVIDS-2025 - IDS para Redes UAV",
+    description="Classifica fluxos de rede de drones. Modelo: XGBoost tunado - F1-macro ~ 0,958.",
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -121,14 +104,14 @@ def build_df(f: TrafficFeatures) -> pd.DataFrame:
 @app.get("/saude")
 def saude():
     if model is None:
-        raise HTTPException(status_code=500, detail="Modelo não carregado.")
+        raise HTTPException(status_code=500, detail="Modelo nao carregado.")
     return {"ok": True, "modelo": MODEL_NAME}
 
 
 @app.post("/predict", response_model=PredictionResponse)
 def predict(features: TrafficFeatures):
     if model is None:
-        raise HTTPException(status_code=503, detail="Modelo não disponível.")
+        raise HTTPException(status_code=503, detail="Modelo nao disponivel.")
     try:
         raw = model.predict(build_df(features))[0]
         label = LABEL_MAP.get(int(raw), str(raw))

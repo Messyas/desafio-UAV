@@ -16,3 +16,7 @@ __pycache__/
 # DVC cache
 .dvc/cache/
 .dvc/tmp/
+
+#vev
+
+*.venv/
