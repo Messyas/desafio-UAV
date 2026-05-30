@@ -23,3 +23,5 @@ notebooks/data/dvcstore/
 #vev
 
 *.venv/
+
+*.mp4
