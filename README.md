@@ -75,7 +75,7 @@ notebooks/01_eda.ipynb       # EDA detalhada
 notebooks/02_modelagem.ipynb # Pipeline, CV, MLflow, Registry
 ```
 
-> Os artefatos do MLflow (`mlruns/`) já estão incluídos com os modelos treinados e o alias `@production` configurado. Só re-execute se quiser re-treinar.
+> Os artefatos do MLflow (`notebooks/mlruns/`) já estão incluídos com os modelos treinados e o alias `@production` configurado. Só re-execute se quiser re-treinar.
 
 ### 5. Promover o modelo para @production (já feito, opcional re-executar)
 
@@ -83,7 +83,7 @@ notebooks/02_modelagem.ipynb # Pipeline, CV, MLflow, Registry
 python src/promover.py
 ```
 
-> Atribui o alias `@production` à versão 1 do modelo `previsor_uav_ids` no MLflow Registry.
+> Atribui o alias `@production` à versão 4 do modelo `previsor_uav_ids` no MLflow Registry.
 
 ### 6. Subir a API com Docker Compose
 
@@ -129,7 +129,7 @@ Documentação interativa (Swagger): **http://localhost:8000/docs**
 ### 8. Visualizar o MLflow UI
 
 ```bash
-mlflow ui --backend-store-uri file:./mlruns --port 5002
+mlflow ui --backend-store-uri file:./notebooks/mlruns --port 5002
 ```
 
 Acesse: **http://localhost:5002**

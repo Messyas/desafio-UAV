@@ -17,6 +17,9 @@ __pycache__/
 .dvc/cache/
 .dvc/tmp/
 
+# DVC remote local (backup do dataset, fica fora do git)
+notebooks/data/dvcstore/
+
 #vev
 
 *.venv/

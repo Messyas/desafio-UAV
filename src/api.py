@@ -1,5 +1,7 @@
 import logging, os
 from contextlib import asynccontextmanager
+from pathlib import Path
+from urllib.parse import urlparse
 import mlflow
 import mlflow.pyfunc
 import pandas as pd
@@ -9,12 +11,17 @@ from pydantic import BaseModel, Field
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-MLFLOW_URI = os.getenv("MLFLOW_TRACKING_URI", "file:./mlruns")
-MODEL_NAME = "models:/previsor_uav_ids@production"
-EPS_SMALL  = 1e-9
-EPS_HOP    = 1.0
+from mlflow.tracking import MlflowClient
 
-# XGBoost foi treinado com LabelEncoder - mapeia inteiros para nomes das classes
+MLFLOW_URI    = os.getenv("MLFLOW_TRACKING_URI", "file:./notebooks/mlruns")
+MODEL_REG     = "previsor_uav_ids"
+MODEL_ALIAS   = "production"
+MODEL_NAME    = f"models:/{MODEL_REG}@{MODEL_ALIAS}"
+EPS_SMALL     = 1e-9
+EPS_HOP       = 1.0
+
+# Fallback caso o modelo retorne inteiros (LabelEncoder do XGBoost).
+# O RandomForest tunado retorna direto o nome da classe (string).
 LABEL_MAP = {
     0: "Blackhole Attack",
     1: "Flooding Attack",
@@ -27,12 +34,53 @@ mlflow.set_tracking_uri(MLFLOW_URI)
 model = None
 
 
+def carregar_modelo_producao():
+    """Carrega o modelo @production de forma portavel.
+
+    Tenta a URI do registry (models:/nome@alias). Se o storage_location
+    gravado for um caminho absoluto que nao existe no ambiente atual
+    (tipico ao rodar dentro de um container, pois o caminho foi salvo
+    no host), reescreve o caminho para o mlruns montado localmente.
+    """
+    try:
+        return mlflow.pyfunc.load_model(MODEL_NAME)
+    except Exception as exc_uri:
+        logger.warning(f"Load via URI do registry falhou ({exc_uri}); tentando caminho local.")
+        client = MlflowClient()
+        mv = client.get_model_version_by_alias(MODEL_REG, MODEL_ALIAS)
+        root = Path(os.path.abspath(MLFLOW_URI.replace("file:", "")))
+        meta_path = root / "models" / MODEL_REG / f"version-{mv.version}" / "meta.yaml"
+        if not meta_path.exists():
+            raise exc_uri
+
+        storage_location = ""
+        for line in meta_path.read_text(encoding="utf-8").splitlines():
+            if line.startswith("storage_location:"):
+                storage_location = line.split(":", 1)[1].strip().strip("'\"")
+                break
+
+        if not storage_location:
+            raise exc_uri
+
+        parsed = urlparse(storage_location)
+        storage_path = parsed.path if parsed.scheme == "file" else storage_location
+        marker = "/notebooks/mlruns/"
+        if marker in storage_path:
+            rel = storage_path.split(marker, 1)[1]
+            local_path = root / rel
+        else:
+            local_path = Path(storage_path)
+
+        logger.info(f"Carregando modelo via caminho local: {local_path}")
+        return mlflow.pyfunc.load_model(str(local_path))
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global model
     try:
-        logger.info(f"Carregando modelo via pyfunc: {MODEL_NAME}")
-        model = mlflow.pyfunc.load_model(MODEL_NAME)
+        logger.info(f"Carregando modelo: {MODEL_NAME}")
+        model = carregar_modelo_producao()
         logger.info("Modelo carregado e pronto.")
     except Exception as exc:
         logger.error(f"Falha ao carregar modelo: {exc}")
@@ -43,7 +91,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="UAVIDS-2025 - IDS para Redes UAV",
-    description="Classifica fluxos de rede de drones. Modelo: XGBoost tunado - F1-macro ~ 0,958.",
+    description="Classifica fluxos de rede de drones. Modelo: RandomForest tunado - F1-macro ~ 0,946.",
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -114,7 +162,11 @@ def predict(features: TrafficFeatures):
         raise HTTPException(status_code=503, detail="Modelo nao disponivel.")
     try:
         raw = model.predict(build_df(features))[0]
-        label = LABEL_MAP.get(int(raw), str(raw))
+        # RandomForest retorna string ("Blackhole Attack"); XGBoost retorna int (0..4).
+        try:
+            label = LABEL_MAP.get(int(raw), str(raw))
+        except (ValueError, TypeError):
+            label = str(raw)
         return PredictionResponse(predicao=label, modelo=MODEL_NAME)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))

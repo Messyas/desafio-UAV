@@ -2,10 +2,12 @@ services:
   api:
     build: .
     container_name: uavids_api
+    environment:
+      MLFLOW_TRACKING_URI: file:./notebooks/mlruns
     ports:
       - "8000:8000"
     volumes:
-      - ./mlruns:/app/mlruns
+      - ./notebooks/mlruns:/app/notebooks/mlruns
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/saude"]
       interval: 30s
