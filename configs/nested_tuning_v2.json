@@ -1,0 +1,131 @@
+{
+  "experiment_id": "nested_tuning_v2",
+  "status": "exploratory_nested_tuning_after_baseline_v1",
+  "random_seed": 20260907,
+  "threads": 4,
+  "protocols": ["S2"],
+  "folds": [0, 1, 2, 3, 4],
+  "inner_folds": 3,
+  "selection_metric": "f1_macro",
+  "tie_tolerance": 0.0001,
+  "tie_rule": "lowest_complexity_rank_then_candidate_id",
+  "class_order": [
+    "Normal Traffic",
+    "Blackhole Attack",
+    "Flooding Attack",
+    "Sybil Attack",
+    "Wormhole Attack"
+  ],
+  "primary_features": [
+    "FlowDuration/s",
+    "SrcPort",
+    "DstPort",
+    "TxPackets",
+    "RxPackets",
+    "LostPackets",
+    "TxBytes",
+    "RxBytes",
+    "TxPacketRate/s",
+    "RxPacketRate/s",
+    "TxByteRate/s",
+    "RxByteRate/s",
+    "MeanDelay/s",
+    "MeanJitter/s",
+    "Throughput/Kbps",
+    "MeanPacketSize",
+    "PacketDropRate",
+    "AverageHopCount"
+  ],
+  "models": {
+    "random_forest": {
+      "enabled": true,
+      "scale": false,
+      "candidates": [
+        {
+          "candidate_id": "rf_160_sqrt_leaf1",
+          "complexity_rank": 1,
+          "parameters": {
+            "n_estimators": 160,
+            "max_features": "sqrt",
+            "min_samples_leaf": 1,
+            "class_weight": "balanced_subsample"
+          }
+        },
+        {
+          "candidate_id": "rf_240_sqrt_leaf2",
+          "complexity_rank": 2,
+          "parameters": {
+            "n_estimators": 240,
+            "max_features": "sqrt",
+            "min_samples_leaf": 2,
+            "class_weight": "balanced_subsample"
+          }
+        },
+        {
+          "candidate_id": "rf_240_half_leaf1",
+          "complexity_rank": 3,
+          "parameters": {
+            "n_estimators": 240,
+            "max_features": 0.5,
+            "min_samples_leaf": 1,
+            "class_weight": "balanced_subsample"
+          }
+        }
+      ]
+    },
+    "xgboost": {
+      "enabled": true,
+      "scale": false,
+      "candidates": [
+        {
+          "candidate_id": "xgb_200_depth6_lr10",
+          "complexity_rank": 2,
+          "parameters": {
+            "n_estimators": 200,
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "min_child_weight": 1,
+            "subsample": 0.8,
+            "colsample_bytree": 0.8,
+            "reg_lambda": 1.0,
+            "objective": "multi:softprob",
+            "eval_metric": "mlogloss",
+            "tree_method": "hist"
+          }
+        },
+        {
+          "candidate_id": "xgb_300_depth4_lr05",
+          "complexity_rank": 1,
+          "parameters": {
+            "n_estimators": 300,
+            "max_depth": 4,
+            "learning_rate": 0.05,
+            "min_child_weight": 1,
+            "subsample": 0.9,
+            "colsample_bytree": 0.9,
+            "reg_lambda": 1.0,
+            "objective": "multi:softprob",
+            "eval_metric": "mlogloss",
+            "tree_method": "hist"
+          }
+        },
+        {
+          "candidate_id": "xgb_250_depth6_lr05_regularized",
+          "complexity_rank": 3,
+          "parameters": {
+            "n_estimators": 250,
+            "max_depth": 6,
+            "learning_rate": 0.05,
+            "min_child_weight": 5,
+            "subsample": 0.9,
+            "colsample_bytree": 0.9,
+            "reg_lambda": 5.0,
+            "objective": "multi:softprob",
+            "eval_metric": "mlogloss",
+            "tree_method": "hist"
+          }
+        }
+      ]
+    }
+  }
+}

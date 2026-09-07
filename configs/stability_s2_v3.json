@@ -1,0 +1,64 @@
+{
+  "experiment_id": "stability_s2_v3",
+  "status": "exploratory_seed_stability_after_nested_tuning",
+  "random_seed": 20260907,
+  "random_seeds": [20260907, 20260908, 20260909],
+  "threads": 4,
+  "protocols": ["S2"],
+  "folds": [0, 1, 2, 3, 4],
+  "class_order": [
+    "Normal Traffic",
+    "Blackhole Attack",
+    "Flooding Attack",
+    "Sybil Attack",
+    "Wormhole Attack"
+  ],
+  "primary_features": [
+    "FlowDuration/s",
+    "SrcPort",
+    "DstPort",
+    "TxPackets",
+    "RxPackets",
+    "LostPackets",
+    "TxBytes",
+    "RxBytes",
+    "TxPacketRate/s",
+    "RxPacketRate/s",
+    "TxByteRate/s",
+    "RxByteRate/s",
+    "MeanDelay/s",
+    "MeanJitter/s",
+    "Throughput/Kbps",
+    "MeanPacketSize",
+    "PacketDropRate",
+    "AverageHopCount"
+  ],
+  "models": {
+    "random_forest": {
+      "enabled": true,
+      "scale": false,
+      "parameters": {
+        "n_estimators": 240,
+        "max_features": "sqrt",
+        "min_samples_leaf": 2,
+        "class_weight": "balanced_subsample"
+      }
+    },
+    "xgboost": {
+      "enabled": true,
+      "scale": false,
+      "parameters": {
+        "n_estimators": 200,
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "min_child_weight": 1,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "reg_lambda": 1.0,
+        "objective": "multi:softprob",
+        "eval_metric": "mlogloss",
+        "tree_method": "hist"
+      }
+    }
+  }
+}

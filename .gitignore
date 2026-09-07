@@ -4,6 +4,14 @@ data/raw/UAVIDS-2025.csv
 # MLflow artifacts grandes (modelos .pkl ficam fora do git)
 mlruns/
 
+# Artefatos regeneráveis do estudo científico.
+# Os comandos e configurações para recriá-los estão em RESEARCH_WORKFLOW.md.
+artifacts/
+benchmarks/
+research_artifacts/
+reports/
+results/
+
 # Checkpoints do Jupyter
 .ipynb_checkpoints/
 

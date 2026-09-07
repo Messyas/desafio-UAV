@@ -1,0 +1,59 @@
+{
+  "artifact_set_id": "deployment_candidates_v1",
+  "purpose": "systems_benchmark_only_not_predictive_evaluation",
+  "random_seed": 20260907,
+  "threads": 4,
+  "class_order": [
+    "Normal Traffic",
+    "Blackhole Attack",
+    "Flooding Attack",
+    "Sybil Attack",
+    "Wormhole Attack"
+  ],
+  "features": [
+    "FlowDuration/s",
+    "SrcPort",
+    "DstPort",
+    "TxPackets",
+    "RxPackets",
+    "LostPackets",
+    "TxBytes",
+    "RxBytes",
+    "TxPacketRate/s",
+    "RxPacketRate/s",
+    "TxByteRate/s",
+    "RxByteRate/s",
+    "MeanDelay/s",
+    "MeanJitter/s",
+    "Throughput/Kbps",
+    "MeanPacketSize",
+    "PacketDropRate",
+    "AverageHopCount"
+  ],
+  "models": {
+    "xgboost": {
+      "scale": false,
+      "parameters": {
+        "n_estimators": 200,
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "min_child_weight": 1,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "reg_lambda": 1.0,
+        "objective": "multi:softprob",
+        "eval_metric": "mlogloss",
+        "tree_method": "hist"
+      }
+    },
+    "random_forest": {
+      "scale": false,
+      "parameters": {
+        "n_estimators": 240,
+        "max_features": "sqrt",
+        "min_samples_leaf": 2,
+        "class_weight": "balanced_subsample"
+      }
+    }
+  }
+}
