@@ -1,5 +1,12 @@
 # Registro de assistência por IA
 
+## Benchmark Docker local
+
+Em 8 de setembro de 2026, a assistência por IA foi usada para estruturar o serviço HTTP mínimo, o gerador de carga, a coleta de `docker stats`, as verificações de hash e a documentação do protocolo Docker local. O código não foi copiado dos notebooks de terceiros nem apresentado como implementação oficial de artigo externo.
+
+O pesquisador decidiu retirar CNN, GNN, stacking, Kubernetes e emulação de rede do escopo. Os modelos, atributos, classes e hashes vieram exclusivamente dos artefatos já congelados no projeto. Um piloto v1 revelou cerca de 45 ms de overhead de transporte; a assistência identificou o padrão Nagle/delayed ACK, registrou o desvio e a rodada integral foi repetida como v2 com `TCP_NODELAY`. Apenas a v2 é usada como resultado.
+
+Limites interpretativos foram mantidos no código e nos relatórios: a bancada não mede energia, bateria, rádio, ARM, tempo até detecção ou um UAV físico.
 ## 7 de setembro de 2026 — auditoria inicial
 
 - Ferramenta: OpenAI Codex.

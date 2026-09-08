@@ -1,0 +1,12 @@
+*
+!Dockerfile
+!requirements-docker.txt
+!src/
+!src/uavids_study/
+!src/uavids_study/docker_inference_service.py
+!artifacts/
+!artifacts/models/
+!artifacts/models/deployment_candidates_v1/
+!artifacts/models/deployment_candidates_v1/manifest.json
+!artifacts/models/deployment_candidates_v1/schema.json
+!artifacts/models/deployment_candidates_v1/*.pkl

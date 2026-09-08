@@ -1,6 +1,6 @@
-# Escopo congelado para a primeira etapa
+# Escopo congelado do artigo
 
-Data da decisão: 7 de setembro de 2026.
+Data da decisão final desta versão: 8 de setembro de 2026.
 
 Este registro transforma as decisões já tomadas no plano em regras verificáveis. Ele poderá ser alterado antes do primeiro treinamento comparativo, mas toda mudança deverá entrar em `protocol/deviations.md` com data, motivo e efeito esperado. Mudanças motivadas pelo resultado do teste final não serão aceitas.
 
@@ -9,7 +9,7 @@ Este registro transforma as decisões já tomadas no plano em regras verificáve
 - Tarefa principal: classificação multiclasse em cinco classes (`Normal Traffic`, `Blackhole Attack`, `Flooding Attack`, `Sybil Attack` e `Wormhole Attack`).
 - Unidade predita: um registro de fluxo do CSV público, representado somente por atributos que o protocolo declare disponíveis no instante da decisão.
 - Tarefas binária e de quatro classes: secundárias e condicionadas ao orçamento; não substituem a análise principal.
-- Métrica primária futura: F1 macro. Métricas por classe, matriz de confusão, balanced accuracy e incerteza deverão acompanhar a métrica primária.
+- Métrica preditiva primária: F1 macro. Métricas por classe, matriz de confusão e balanced accuracy acompanham a métrica primária.
 
 ## Populações avaliadas
 
@@ -27,14 +27,13 @@ S0, S1 e S2 respondem a perguntas diferentes. Nenhum resultado será chamado sim
 - `Protocol` será excluído enquanto permanecer constante (`UDP`).
 - As 18 variáveis numéricas registradas em `data_manifest.json` formam a assinatura S1 e o painel tabular inicial.
 - A disponibilidade causal e local das variáveis permanece não confirmada. Até esclarecimento, o resultado representa classificação de vetores de fluxo prontos, sem alegar um IDS embarcado completo.
-- A sequência de `FlowID` não será interpretada como tempo. Modelos temporais e tempo até detecção ficam bloqueados até existirem timestamp, sessão e execução confiáveis.
-- Por decisão do pesquisador em 7 de setembro de 2026, GNN e contexto temporal foram suspensos nesta etapa. Agregados relacionais tabulares poderão ser reconsiderados, sem afirmar que IP equivale a dispositivo físico.
+- A sequência de `FlowID` não será interpretada como tempo. Modelos temporais, GNN e tempo até detecção estão fora desta versão.
 
 ## Escopo do artigo
 
-O núcleo compara árvores, boosting e redes compactas; reproduz criticamente a suficiência atribuída ao Random Forest; e testa o valor próprio de contexto relacional quando defensável. A execução local versus borda será avaliada depois que os modelos forem congelados.
+O núcleo desta versão compara Random Forest e XGBoost sob protocolos resistentes a identificadores e mede seu custo de atendimento em Docker local. MLP e outros modelos já executados permanecem apenas como baselines exploratórios.
 
-Ataques desconhecidos, aprendizado federado, votação bizantina e Kubernetes não pertencem ao núcleo inicial. Docker e `tc-netem` poderão compor o benchmark de sistemas; Kubernetes só será reconsiderado se houver uma pergunta experimental que exija orquestração e tolerância a falhas.
+Outros datasets, ataques desconhecidos, aprendizado federado, votação bizantina, CNN, GNN, modelos temporais, stacking, Kubernetes e `tc-netem` estão fora desta versão. O benchmark usa Docker local em loopback, sem afirmar equivalência com hardware embarcado.
 
 ## Exposição prévia e limites
 

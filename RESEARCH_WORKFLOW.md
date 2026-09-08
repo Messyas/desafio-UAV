@@ -64,4 +64,23 @@ Os diretórios `job_predictions` e `job_records` são a fonte dos resultados agr
 
 ## Estado científico
 
-O baseline v1 é exploratório, usa uma semente e hiperparâmetros fixos. O passo seguinte é implementar tuning interno compatível com os grupos, repetir sementes, revisar convergência da MLP e congelar os modelos antes do benchmark Docker/`tc-netem`. GNN e contexto temporal estão suspensos.
+O estudo concluído até aqui contém auditoria, protocolos S0/S1/S2, ablação de `FlowID`, tuning aninhado exploratório, estabilidade de Random Forest/XGBoost e benchmark Docker local dos dois artefatos congelados. CNN, GNN, stacking, múltiplos datasets, Kubernetes e `tc-netem` estão fora desta versão.
+
+## Benchmark Docker local v2
+
+Decisão registrada em 8 de setembro de 2026: CNN, GNN, stacking, Kubernetes e `tc-netem` não integram esta versão. O benchmark usa os artefatos congelados de XGBoost e Random Forest, sem recalcular desempenho preditivo nos dados de ajuste.
+
+```powershell
+docker version
+.\.venv\Scripts\python.exe src\uavids_study\docker_benchmark.py
+```
+
+Configuração executável: `configs/docker_local_v2.json`. Protocolo: `protocol/docker_local_v2.md`. Os registros finais são gravados em `benchmarks/docker_local_v2/` e os resumos em `reports/docker_local_v2/`. A pasta `docker_local_v1` contém um piloto descartado devido ao atraso Nagle/delayed ACK documentado no protocolo e em `protocol/deviations.md`.
+
+O comando constrói a imagem, valida os hashes dos modelos, executa um container por modelo com 0,5 CPU e 512 MiB, mede latência HTTP, throughput e amostras de CPU/RAM, remove os containers ao final e preserva a imagem para auditoria. Os resultados descrevem Docker Desktop/WSL2 em loopback; não representam bateria, rádio, ARM ou um drone físico.
+
+Após uma execução completa, reconstruir o notebook de análise a partir dos resultados preservados:
+
+```powershell
+.\.venv\Scripts\python.exe tools\build_docker_benchmark_notebook.py
+```

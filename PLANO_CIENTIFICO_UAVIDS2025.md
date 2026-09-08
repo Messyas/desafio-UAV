@@ -4,9 +4,9 @@ Data: 7 de setembro de 2026. Versão inicial: 1.0.
 
 Este documento especifica um projeto novo, a ser implementado do zero. Ele não valida o código antigo, não autoriza sua exclusão automática e não contém resultados novos de treinamento. Os notebooks anteriores servem apenas como material exploratório e fonte de hipóteses. DVC e a API antiga não fazem parte da contribuição científica proposta.
 
-Título de trabalho: **Árvores, aprendizado profundo leve e contexto relacional na detecção de intrusões em UAVs: generalização e eficiência além da divisão aleatória**.
+Título de trabalho: **Além da divisão aleatória: identificadores, generalização por origem e custo de inferência no UAVIDS-2025**.
 
-A contribuição pretendida é uma avaliação reproduzível que identifique como o protocolo de divisão dos dados, a representação dos fluxos e os recursos de comunicação afetam a escolha do detector. Superioridade, novidade e viabilidade embarcada são hipóteses a investigar, não conclusões antecipadas.
+A contribuição desta versão é uma avaliação reproduzível de como identificadores, protocolo de divisão e custo de atendimento em Docker local afetam a escolha entre Random Forest e XGBoost. Por decisão registrada em 8 de setembro de 2026, CNN, GNN, stacking, Kubernetes e emulação de rede não integram o núcleo. Superioridade, novidade e viabilidade embarcada não são conclusões antecipadas.
 
 ## 1. Como executar este checklist
 
@@ -24,15 +24,15 @@ A contribuição pretendida é uma avaliação reproduzível que identifique com
 - [ ] F1 — Revisar literatura e registrar proveniência dos códigos.
 - [ ] F2 — Obter dataset e esclarecer metadados com os autores.
 - [x] F3 — Auditar dados e criar contrato de atributos. Evidência: `notebooks/research/00_auditoria_e_protocolo.ipynb` e `research_artifacts/data_audit/`.
-- [ ] F4 — Congelar protocolos de divisão, tuning e análise.
-- [ ] F5 — Implementar baselines e testes de integridade metodológica.
-- [ ] F6 — Executar comparação preditiva e ablações.
-- [ ] F7 — Congelar modelos e executar benchmark de sistemas.
-- [ ] F8 — Realizar extensões apenas se justificadas.
+- [x] F4 — Congelar protocolos de divisão, tuning e análise. Evidência: `protocol/evaluation_v1.md`, `configs/nested_tuning_v2.json` e splits persistidos.
+- [x] F5 — Implementar baselines e testes de integridade metodológica. Evidência: `src/uavids_study/` e `tests/`.
+- [x] F6 — Executar comparação preditiva e ablação de identificador. Evidência: `results/predictive_baseline_v1/`, `reports/nested_tuning_v2/` e `reports/stability_v1/`.
+- [x] F7 — Congelar modelos e executar benchmark Docker local. Evidência: `protocol/docker_local_v2.md`, `benchmarks/docker_local_v2/` e `reports/docker_local_v2/`.
+- [x] F8 — Avaliar extensões e retirá-las desta versão por decisão de escopo registrada.
 - [ ] F9 — Analisar resultados, limitações e incertezas.
 - [ ] F10 — Reproduzir a execução e escrever o artigo.
 
-F1 e a obtenção de F2 podem avançar juntas. F5 depende de F3–F4. A preparação da bancada pode ocorrer antes, mas as medições finais de F7 dependem de modelos selecionados sem consultar o teste. Não iniciar GNN temporal, LSTM temporal ou medição de tempo até detectar ataques sem resolver a disponibilidade de tempo e sessões.
+F1 e a obtenção de F2 podem avançar juntas. F9 e F10 permanecem necessários para a submissão. CNN, GNN, LSTM, stacking, múltiplos datasets, Kubernetes, emulação de rede e tempo até detectar ataques estão fora do escopo desta versão.
 
 ## 2. F0 — Escopo científico
 
@@ -40,54 +40,25 @@ F1 e a obtenção de F2 podem avançar juntas. F5 depende de F3–F4. A prepara�
 
 | ID | Pergunta | Evidência necessária |
 |---|---|---|
-| P1 | O desempenho quase perfeito atribuído ao Random Forest persiste quando identificadores e repetições são controlados e a avaliação é repetida em datasets distintos? | Reprodução fiel, reprodução corrigida, divisões por grupos e replicação independente por dataset |
-| P2 | Uma rede neural compacta supera RF/Extra Trees/boosting em qualidade e custo quando recebe exatamente a mesma informação? | Comparação pareada, ablação arquitetural e medição completa de tamanho, memória e latência |
-| P3 | Contexto relacional e, se houver metadados válidos, temporal acrescenta informação além de agregados tabulares equivalentes, sobretudo em Blackhole/Wormhole? | Modelos com contexto equivalente, divisões antes de janelas/grafos e ablação do contexto |
-| P4 | Sob quais condições executar localmente ou na borda atende melhor às restrições? | Latência, qualidade, vazão, recursos e falhas sob carga e rede controladas |
+| P1 | Quanto `FlowID` altera o desempenho aparente no UAVIDS-2025? | Ablação pareada com e sem o identificador, sem usar o resultado diagnóstico para selecionar o painel principal |
+| P2 | Quanto as conclusões mudam entre divisão aleatória, assinaturas repetidas e origens não vistas? | S0, S1 e S2 com índices persistidos, preprocessamento dentro do treino e métricas por classe |
+| P3 | Entre Random Forest e XGBoost com qualidade semelhante, qual oferece a melhor fronteira local de qualidade e custo? | Estabilidade preditiva e benchmark Docker controlado de latência, vazão, memória, CPU e tamanho |
 
-### Três eixos centrais do artigo
+### Dois eixos centrais do artigo
 
-Os três eixos abaixo deixam de ser extensões opcionais e passam a organizar contextualização, metodologia, resultados e discussão. A avaliação local versus borda permanece como avaliação transversal de implantação dos modelos selecionados.
+#### Eixo I — Robustez da avaliação tabular
 
-#### Eixo I — Deep learning leve versus modelos tabulares
+O estudo quantifica o efeito de `FlowID` e compara S0, S1 e S2. O objetivo é mostrar quais conclusões dependem do identificador, de padrões repetidos ou da capacidade de generalizar para origens não vistas.
 
-O ponto de partida é a afirmação de R4 de que uma CNN residual compacta pode combinar alta qualidade e baixo custo. O estudo deve testar essa afirmação sob a mesma informação, os mesmos splits e a mesma fronteira de medição usada para RF, Extra Trees e boosting.
+#### Eixo II — Fronteira local de qualidade e custo
 
-- [ ] Reproduzir ou reimplementar a arquitetura de R4 com parâmetros e preprocessing confirmados.
-- [ ] Comparar RF, Extra Trees, boosting, MLP compacta e CNN residual com os mesmos atributos tabulares.
-- [ ] Separar forward pass, pipeline completo e requisição ponta a ponta.
-- [ ] Testar se eventual vantagem neural permanece em S1/S2/S3 e em batch 1 na CPU.
-- [ ] Reportar parâmetros, tamanho serializado, memória de pico, tempo de ajuste e latência; FLOPs não substituem medição.
-
-#### Eixo II — O Random Forest é realmente suficiente em datasets distintos?
-
-R7 relata desempenho quase perfeito de RF em Drone IDS, UAVIDS-2025 e ICSCASD-MPLC. Esse resultado será tratado como hipótese forte a reproduzir criticamente. **Treinar e testar separadamente em três datasets é replicação multi-dataset; não é transferência entre datasets.** Transferência exige treinar em uma origem e testar em outra, com taxonomia e atributos compatíveis.
-
-- [ ] Executar reprodução fiel da metodologia relatada, sem apresentá-la como resultado próprio corrigido.
-- [ ] Executar reprodução corrigida, removendo identificadores e mantendo transformações dentro dos folds.
-- [ ] No UAVIDS-2025, testar explicitamente com e sem `FlowID` e quantificar a inflação de desempenho.
-- [ ] Repetir o painel em cada dataset separadamente, respeitando sua unidade amostral, sessões e taxonomia.
-- [ ] Não comparar apenas os F1 brutos entre datasets com número de classes e dificuldade diferentes.
-- [ ] [CONDICIONAL] Executar transferência entre datasets apenas se houver interseção semanticamente válida de atributos e rótulos; documentar harmonização e perda de informação.
-
-#### Eixo III — O contexto relacional/temporal produz ganho próprio?
-
-**Status em 7 de setembro de 2026:** GNN e contexto temporal foram suspensos por decisão do pesquisador e pela ausência de metadados verificáveis. Os itens abaixo ficam documentados para uma eventual versão futura e não bloqueiam E1/E2 nem o benchmark de sistemas.
-
-R2 sustenta que fluxos independentes descartam relações entre nós e evolução temporal. O estudo deve separar o benefício de **mais contexto** do benefício da **arquitetura de grafo ou sequência**.
-
-- [ ] Criar um baseline tabular com agregados da mesma vizinhança/janela fornecida à GNN ou rede temporal.
-- [ ] Comparar fluxo isolado, agregados de contexto, MLP/CNN com contexto e GNN/temporal sob a mesma divisão.
-- [ ] Medir ganho específico em Blackhole/Wormhole, falsos alarmes e custo de construção do contexto.
-- [ ] Dividir execuções/sessões antes de construir janelas e grafos.
-- [ ] Se timestamps/sessões não forem obtidos, limitar o eixo a contexto relacional entre `SrcAddr` e `DstAddr`; não publicar uma alegação temporal baseada na ordem do CSV.
-- [ ] Se nem a identidade relacional puder ser validada entre simulações, registrar que P3 não é respondível pelo artefato público e apresentar essa limitação como resultado de auditabilidade.
+Random Forest e XGBoost são comparados após seleção e congelamento dos artefatos. O benchmark Docker mede vetores de 18 atributos já calculados, em loopback e sob limites iguais de CPU e memória. R4 permanece como contraponto bibliográfico sobre modelos compactos, sem reprodução experimental de sua CNN.
 
 - [x] [MANUAL] Adotar cinco classes como tarefa principal: Normal, Blackhole, Flooding, Sybil e Wormhole.
 - [x] [MANUAL] Registrar unidade predita: um registro de fluxo com atributos disponíveis no momento definido pelo experimento.
 - [x] [MANUAL] Definir população de interesse: novos registros da mesma distribuição, novas origens ou novas execuções de simulação. Não tratar essas populações como equivalentes.
 - [x] [MANUAL] Manter binário e quatro classes como análises secundárias, se houver orçamento.
-- [x] [MANUAL] Excluir do núcleo inicial: ataques desconhecidos, aprendizado federado, votação bizantina e Kubernetes. GNN/contexto temporal pertence ao núcleo somente após passar o gate de metadados da F2; sem ele, executar apenas a variante relacional defensável.
+- [x] [MANUAL] Excluir desta versão: CNN, GNN, LSTM, stacking, múltiplos datasets, ataques desconhecidos, aprendizado federado, votação bizantina, Kubernetes e emulação de rede.
 - [ ] [MANUAL] Registrar equipamento disponível, horas de processamento, disponibilidade de Linux e acesso eventual a uma placa embarcada.
 - [ ] [MANUAL] Selecionar publicação-alvo provisória e consultar exigências de dados, código, uso de IA e extensão do artigo no site oficial escolhido.
 - [ ] [REVISÃO] Verificar se a contribuição ainda se diferencia dos trabalhos da F1. Não prometer publicação nem ineditismo antes desta revisão.
@@ -97,10 +68,8 @@ R2 sustenta que fluxos independentes descartam relações entre nós e evoluçã
 ### Resultados que também são cientificamente válidos
 
 - Um baseline simples permanecer melhor após tuning equilibrado.
-- As derivadas não acrescentarem ganho mensurável.
 - O ranking mudar entre protocolos, sem que um deles represente uma verdade universal.
-- A borda melhorar o custo local, mas falhar em prazo ou disponibilidade.
-- O ganho do stacking ser pequeno em relação à latência ou memória adicionais.
+- Random Forest e XGBoost apresentarem qualidade equivalente, mas custos operacionais muito diferentes.
 
 ## 3. F1 — Literatura, artigos e código de terceiros
 
@@ -119,17 +88,17 @@ O quadro é uma seleção inicial, não uma revisão sistemática concluída. Re
 | R7 | **Advanced explainable ensemble models for multi-class intrusion detection in heterogeneous drone and industrial networks**, 2026. [Artigo](https://link.springer.com/article/10.1186/s13635-026-00234-w) | Contraponto central: relata RF com F1-macro 0,99964, 0,99844 e 0,99994 em Drone IDS, UAVIDS-2025 e ICSCASD-MPLC. Reproduzir criticamente. A Fig. 1 indica remoção de identificadores, mas os resultados apresentam `FlowID` como atributo mais importante do UAVIDS-2025; esclarecer com autores/código se o identificador entrou no treino. Extrair splits, unidade da latência por batch, scripts e dados antes de interpretar os escores. |
 | R8 | Artefato **uavsybildetection**. [README do repositório](https://github.com/fagumus/uavsybildetection/blob/main/README.md) | Auditoria de identidade e controles com origens separadas. Confirmar artigo associado, status, commit e licença. A existência do repositório não certifica revisão por pares. |
 
-### Como os três contrapontos entram na contextualização
+### Como os contrapontos entram na contextualização
 
 Não copiar as formulações abaixo literalmente para o artigo final antes de concluir a reprodução. Elas registram a lógica argumentativa e devem ser reescritas com os resultados efetivamente obtidos.
 
-1. **Contra a dicotomia “árvores leves versus redes pesadas”.** R4 relata que uma CNN residual pode atingir alta qualidade com tamanho e tempo de inferência reduzidos. Em contrapartida a essa conclusão de viabilidade, o presente estudo submete redes compactas e ensembles tabulares à mesma informação, aos mesmos protocolos de generalização e à mesma definição de custo ponta a ponta.
-2. **Contra a inferência de generalidade a partir de resultados quase perfeitos.** R7 relata RF como melhor modelo em três datasets distintos. O presente estudo distingue consistência do algoritmo entre datasets, transferência entre domínios e possível dependência de identificadores. Essa distinção é necessária porque o artigo apresenta `FlowID` como principal atributo do UAVIDS-2025, apesar de o fluxograma metodológico indicar remoção de identificadores.
-3. **Contra o tratamento de cada fluxo como observação independente.** R2 argumenta que ataques coordenados exigem contexto topológico e temporal. O presente estudo testa se o ganho permanece quando modelos tabulares recebem agregados do mesmo contexto e quando a divisão impede compartilhamento de sessões/janelas.
+1. **Custo precisa de uma fronteira explícita.** R4 relata alta qualidade e baixo custo para uma CNN residual. A presente pesquisa não reproduz essa arquitetura; usa o trabalho para justificar a separação entre tempo interno do estimador, latência HTTP, tamanho e memória, sem comparar diretamente números medidos em bancadas diferentes.
+2. **Resultados quase perfeitos exigem auditoria de identificadores.** R7 relata RF como melhor modelo em três datasets. No caso do UAVIDS-2025, seu artigo apresenta `FlowID` como atributo importante apesar de o fluxograma indicar remoção de identificadores. Essa tensão motiva a ablação pareada usada aqui.
+3. **Amostras independentes têm alcance limitado.** R2 argumenta a favor de contexto topológico e temporal. Como o CSV local não fornece metadados suficientes para reproduzir esse cenário com rigor, o trabalho é citado como limitação e direção futura, sem experimento GNN ou temporal.
 
 Formulação metodológica segura:
 
-> Em contrapartida a trabalhos que relatam alta qualidade com redes profundas compactas, árvores quase perfeitas em múltiplos datasets ou vantagem de representações em grafos, esta pesquisa não assume a superioridade prévia de nenhuma família. As hipóteses são avaliadas sob informação equivalente, protocolos de generalização explícitos e fronteiras comuns de medição computacional.
+> Em contrapartida a resultados quase perfeitos cuja documentação deixa ambíguo o uso de identificadores, esta pesquisa mede explicitamente o efeito de `FlowID`, compara populações de teste distintas e avalia Random Forest e XGBoost sob a mesma fronteira Docker local.
 
 Evitar expressões como “ao contrário de R4, deep learning é pesado”, “R7 provou generalização entre datasets” ou “R2 provou que GNN é necessária”. Elas excedem o que as comparações descritas demonstram.
 
@@ -334,22 +303,9 @@ Essa árvore é uma especificação futura; criar este MD não cria ou implement
 | Dummy/majoritário | Sanidade | Métrica e distribuição de referência |
 | Regressão logística | Baseline linear | Escalonamento no treino e convergência |
 | Random Forest | Baseline forte de árvores | Faixa de capacidade suficiente; medir tamanho e custo |
-| XGBoost ou LightGBM | Boosting | Escolher biblioteca no desenvolvimento ou incluir ambas explicitamente |
-| Stacking | Integração de modelos | Predições fora da amostra e custo completo |
-| MLP compacta | Baseline neural tabular | Mesmos atributos, tuning, seeds e early stopping correto |
+| XGBoost | Boosting e candidato operacional | Mesmos atributos, splits, orçamento e limites de serviço |
 
-Escolher uma composição de stacking executável e registrada, por exemplo RF + boosting + MLP com meta-modelo linear. Se for escolhida RF + XGBoost + LightGBM para aproveitar a ideia anterior, ambas as bibliotecas passam a integrar o plano e o orçamento. Não alterar composição porque o teste favoreceu outra.
-
-### Stacking sem contaminação interna
-
-- [ ] [CÓDIGO] Cada estimador base deve conter seu próprio pré-processamento aprendido nos dados permitidos.
-- [ ] [CÓDIGO] Gerar probabilidades OOF: cada exemplo usado para treinar o meta-modelo deve ser predito por bases que não o usaram no ajuste.
-- [ ] [CÓDIGO] Usar folds internos compatíveis com os grupos do treino corrente; índices devem ser relativos a esse subconjunto.
-- [ ] [CÓDIGO] Não usar `cv=5` como prova de tratamento de grupos. Verificar a API da versão instalada e passar splits explícitos ou implementar OOF controlado.
-- [ ] [CÓDIGO] Não reutilizar em um fold modelos ajustados em partições mais amplas; incluir seleção das bases no fluxo de treinamento interno definido.
-- [ ] [REVISÃO] Conferir com conjuntos pequenos que nenhuma assinatura/grupo proibido cruza o ajuste OOF.
-
-Consultar a semântica de [StackingClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingClassifier.html), especialmente a finalidade das predições de validação cruzada para o meta-modelo.
+Modelos adicionais executados durante exploração podem aparecer em material suplementar, desde que identificados como exploratórios. A comparação confirmatória e o benchmark de sistemas desta versão se limitam a Random Forest e XGBoost.
 
 ### Testes que protegem a validade científica
 
@@ -377,39 +333,25 @@ Consultar a semântica de [StackingClassifier](https://scikit-learn.org/stable/m
 - [x] Não atribuir a diferença entre S0 e S1 exclusivamente a vazamento: há também diferença de distribuição, tamanho e dificuldade dos testes.
 - [ ] Produzir diagnóstico complementar de desempenho em linhas vistas/equivalentes e inéditas dentro do teste S0, sem treinar após observar o diagnóstico.
 
-### Desenho dos três experimentos centrais
+### Desenho dos experimentos centrais
 
 | Experimento | Pergunta principal | Tratamentos mínimos | Controle decisivo | Resultado que refuta a hipótese do projeto |
 |---|---|---|---|---|
-| E1 — Compacto | Redes compactas dominam árvores? | RF, Extra Trees, boosting, MLP e CNN residual | Mesmos atributos, splits, tuning comparável, batch e hardware | Rede não supera melhor árvore na fronteira qualidade–custo, ou vice-versa |
-| E2 — Multi-dataset | RF é consistentemente suficiente? | Reprodução fiel e corrigida em UAVIDS-2025, Drone IDS e ICSCASD-MPLC | Remoção de IDs, transformações dentro dos folds e splits coerentes com cada dataset | Quase perfeição permanece mesmo sob controles rigorosos |
-| E3 — Contexto | Relações/janelas acrescentam informação? | Fluxo isolado, agregados tabulares de contexto e modelo relacional/temporal | Mesmo contexto observável e divisão anterior à construção | Agregados tabulares igualam GNN/temporal ou contexto não melhora o teste |
+| E1 — Identificador | `FlowID` infla o desempenho aparente? | Avaliação pareada com e sem `FlowID` | Mesmo split, estimador e orçamento | A remoção não altera materialmente as métricas |
+| E2 — Generalização | A conclusão permanece em S0, S1 e S2? | RF e XGBoost nos splits congelados | Mesmo contrato de atributos e tuning interno | A ordenação muda ou o desempenho cai sob grupos mais exigentes |
+| E3 — Docker local | Qual modelo oferece a melhor fronteira qualidade–custo? | RF e XGBoost congelados, batch 1 e lotes | Mesma imagem-base, 0,5 CPU, 512 MiB e carga repetida | A diferença de custo é pequena ou contradiz a escolha preditiva |
 
-- [ ] [MANUAL] Obter e licenciar Drone IDS e ICSCASD-MPLC a partir das referências primárias de R7; não usar um espelho sem conferir versão/checksum.
-- [ ] [MANUAL] Confirmar número de classes, unidade amostral, origem dos rótulos, sessões e atributos de cada dataset antes de escrever o comparativo.
-- [ ] [CÓDIGO] Em E2, manter um protocolo próprio por dataset quando a estrutura exigir. “O mesmo protocolo” significa os mesmos princípios contra contaminação, não forçar o mesmo divisor a dados incompatíveis.
 - [x] [CÓDIGO] Produzir dois resultados diagnósticos inspirados em R7 no UAVIDS-2025: com `FlowID` e sem `FlowID`, sem chamar a execução de reprodução fiel sem o código original.
 - [x] [CÓDIGO] Não usar desempenho com `FlowID` para selecionar features ou ajustar o painel principal.
 - [ ] [MANUAL] Tratar a aparente inconsistência de R7 como questão de reprodutibilidade até examinar código ou obter resposta dos autores; não alegar erro metodológico como fato consumado.
-- [ ] [CÓDIGO] Em E3, registrar quantos fluxos e quanto tempo de observação são necessários antes de cada decisão; comparar também o atraso introduzido pela janela.
 
 ### Ablações planejadas
 
 | ID | Comparação | Fatores a manter constantes |
 |---|---|---|
-| A1 | Originais × originais + três derivadas × remoção individual de cada derivada | Split, orçamento e definição do pipeline |
-| A2 | RF com capacidade limitada × faixa mais ampla de capacidade | Dados, métrica e orçamento registrado |
-| A3 | Melhor base × stacking | Tarefa, dados disponíveis e protocolo |
-| A4 | Sem IPs × codificação de IPs aprendida no treino | Grupos e tratamento de valores desconhecidos |
-| A5 | Cinco classes × quatro classes treinadas × previsões de cinco agrupadas | Mesmos exemplos e métrica na mesma taxonomia ao comparar |
-| A6 | Manter × tratar valores anômalos conforme política | Não mudar simultaneamente outras features |
 | A7 | Com `FlowID` × sem `FlowID` | Reprodução diagnóstica de R7; resultado principal sempre sem identificador |
-| A8 | Fluxo isolado × agregados de contexto × modelo relacional/temporal | Mesmas observações causais, grupos e horizonte de decisão |
 
-- [ ] Definir se A1/A6 medem contribuição com hiperparâmetros fixos ou ganho com retuning. Se ambos, apresentar separadamente.
-- [ ] Em A5, calcular métricas de quatro classes para as duas estratégias comparadas; não comparar diretamente o F1-macro de cinco com o de quatro.
-- [ ] Para agrupamento probabilístico, somar probabilidades das classes originais antes de decidir; distinguir isso de mapear a classe vencedora após argmax.
-- [ ] Não usar importância Gini/SHAP como substituta de ablação causal do componente.
+- [x] Manter o resultado principal sem `FlowID` e tratar sua inclusão apenas como diagnóstico metodológico.
 - [ ] Explicar Blackhole/Wormhole com erros e atributos de desenvolvimento; figuras do teste são análise pós-avaliação, sem reajuste posterior do método.
 
 ### Métricas preditivas
@@ -424,7 +366,7 @@ Consultar a semântica de [StackingClassifier](https://scikit-learn.org/stable/m
 
 **Entregáveis:** predições por fold/seed, métricas brutas, tabelas e resultados de ablações. **Critério de conclusão:** diferenças podem ser recalculadas sem carregar ou retreinar os modelos.
 
-## 9. F7 — Benchmark de inferência local e na borda
+## 9. F7 — Benchmark de inferência Docker local
 
 ### Definir o que é medido
 
@@ -433,106 +375,58 @@ Consultar a semântica de [StackingClassifier](https://scikit-learn.org/stable/m
 | Tempo do modelo | Entrada pronta do estimador → saída | Exclui extração e comunicação |
 | Tempo do pipeline | Vetor bruto disponível → predição | Inclui derivadas, codificação e pré-processamento |
 | Latência da requisição | Envio pelo cliente → resposta recebida | Inclui serialização, rede, fila e pipeline |
-| Tempo até detectar ataque | Início verificável do ataque → alerta | Exige tráfego temporal, extração causal e evento conhecido |
 
 Reproduzir linhas do CSV em uma agenda artificial mede atendimento de vetores de fluxo. Não reproduz a cronologia original nem o efeito de perda/jitter sobre os atributos que originaram o CSV.
 
-- [ ] [MANUAL] Definir se o cenário é um UAV com inferência própria, um cliente representativo ou um coletor central. Especificar o acesso aos atributos.
-- [ ] [MANUAL] Definir transporte, formato, tamanho do payload, conexões persistentes, TLS se aplicável e política de timeout/retry.
+- [x] [MANUAL] Definir o cenário como um cliente representativo enviando vetores de fluxo já calculados a um serviço no Docker local; não representa inferência embarcada no UAV.
+- [x] [MANUAL] Definir HTTP/1.1 em loopback, JSON com até 1.024 vetores de 18 atributos, conexões persistentes, sem TLS e timeout de 30 s. Não há retry automático.
 - [ ] [MANUAL] Fixar critério operacional de prazo com fonte/justificativa. Na ausência de requisito real, usar análise de sensibilidade, sem chamar valores arbitrários de SLA de voo.
 - [x] [CÓDIGO] Selecionar candidatos pelo desenvolvimento, ajustar artefatos para benchmark em todos os dados depois da avaliação e congelar hashes antes da medição. Esses artefatos não produzem métricas preditivas de treino.
-- [x] [CÓDIGO] Congelar os mesmos artefatos a serem usados nas posições local e borda, para isolar localização. A posição em container ainda está pendente.
-- [ ] [CÓDIGO] Depois comparar configurações com modelos de tamanhos diferentes, explicitando a mudança de dois fatores.
+- [x] [CÓDIGO] Usar no container os mesmos hashes de XGBoost e Random Forest congelados para o piloto local em processo.
+- [x] [CÓDIGO] Comparar os dois modelos sob o mesmo serviço e os mesmos limites, declarando que família e tamanho do artefato variam juntos.
 
 ### Bancada e controles
 
-- [ ] [MANUAL] Preferir host Linux dedicado ou registrar detalhadamente VM/WSL2 e Docker Desktop. Não equiparar vCPU limitada a processador ARM específico.
-- [ ] [CÓDIGO] Separar processos/containers do gerador, inferência e coleta. Evitar que o gerador seja o gargalo ou concorra nos mesmos núcleos sem medição.
-- [ ] [CÓDIGO] Aplicar limites CPU/RAM, fixar threads e registrar throttling, OOM e uso de swap.
-- [ ] [CÓDIGO] Medir baseline sem restrições e baseline sem degradação de rede.
-- [ ] [CÓDIGO] Aplicar netem apenas às interfaces da bancada; registrar direção, atraso de cada sentido, distribuição e semente quando suportada.
-- [ ] [CÓDIGO] Verificar RTT, perda observada e banda efetiva antes de cada perfil. Configuração nominal não basta.
-- [ ] [CÓDIGO] Em TCP, registrar retries/timeouts: perda de pacote pode produzir retransmissão e aumento de latência, não necessariamente perda de requisição.
-- [ ] [CÓDIGO] Não alterar o tráfego de administração ou a rede pessoal durante os testes.
+- [x] [MANUAL] Registrar Docker Desktop 4.66.1, Engine 29.3.1, kernel WSL2 Linux/amd64 e host Windows no manifesto. A quota não é equiparada a ARM.
+- [x] [CÓDIGO] Executar gerador e coleta no host e um container de inferência separado por modelo; preservar throughput observado para detectar gargalo da bancada.
+- [x] [CÓDIGO] Aplicar 0,5 CPU, 512 MiB, uma thread numérica e 256 PIDs; persistir os limites observados pelo Docker.
+- [x] [CÓDIGO] Executar em loopback sem degradação artificial de rede e declarar essa fronteira.
 
-Documentação: [recursos do Docker](https://docs.docker.com/engine/containers/resource_constraints/) e [netem](https://man7.org/linux/man-pages/man8/tc-netem.8.html). São mecanismos de limitação/emulação; não reproduzem automaticamente rádio, mobilidade ou consumo energético de drones.
+Documentação: [recursos do Docker](https://docs.docker.com/engine/containers/resource_constraints/). A limitação de recursos não reproduz automaticamente rádio, mobilidade, ARM ou consumo energético de drones.
 
-### Matriz inicial para o piloto — não são condições reais comprovadas
+### Matriz congelada do benchmark local
 
 | Fator | Níveis iniciais sugeridos |
 |---|---|
-| CPU | 0,5; 1; 2 CPUs equivalentes em quota, sempre com host identificado |
-| RAM | 512 MiB; 1 GiB; 2 GiB; registrar configurações inviáveis |
-| Atraso adicional | 0; 10; 50; 100 ms por sentido explicitamente configurado |
-| Jitter/perda | Baseline e perfis independentes; exemplos de perda: 0%; 0,1%; 1% |
-| Banda | Baseline sem limite adicional; 1; 10; 100 Mbit/s |
-| Batch | 1 como principal; lotes adicionais como experimento separado |
-| Carga | Escalonar taxa oferecida até antes, perto e além da saturação |
+| CPU | 0,5 CPU equivalente em quota |
+| RAM | 512 MiB |
+| Rede | HTTP em loopback, sem emulação |
+| Batch | 1, 32, 256 e 1024 |
+| Concorrência | 1, 4 e 8 clientes |
+| Repetições | 5 por condição, após 200 chamadas de aquecimento |
 
-Não executar automaticamente o produto cartesiano de tudo. Primeiro variar um fator, identificar faixas críticas e congelar uma matriz reduzida com interações justificadas. Valores plausíveis para aplicação UAV precisam de fonte ou nova simulação; caso contrário, chamá-los de análise de sensibilidade.
+Essa matriz caracteriza apenas o computador e o Docker registrados no manifesto. Ela não representa um perfil de enlace UAV.
 
 ### Medição rigorosa
 
-- [ ] [CÓDIGO] Usar relógio monotônico de alta resolução e IDs de requisição. Medir ida/volta no mesmo cliente; latência de um sentido exige relógios sincronizados e erro conhecido.
+- [x] [CÓDIGO] Usar `perf_counter_ns` monotônico e IDs de repetição/chamada. Medir ida/volta no mesmo cliente e tempo interno separadamente.
 - [x] [CÓDIGO] Separar carregamento, aquecimento e regime estável no piloto local.
 - [x] [CÓDIGO] Medir chamada individual e lotes separadamente. O custo dividido pelo lote foi rotulado como amortizado.
-- [ ] [CÓDIGO] Se houver GPU, sincronizar corretamente. Consultar [benchmark PyTorch](https://docs.pytorch.org/tutorials/recipes/recipes/benchmark.html).
-- [ ] [CÓDIGO] Usar carga de chegada programada independente das respostas para investigar filas; registrar atraso do próprio gerador em relação ao envio agendado.
-- [ ] [CÓDIGO] Registrar requisições agendadas, enviadas, concluídas, falhas, retries e descartes. Reportar latência de sucessos junto com disponibilidade, sem ocultar timeouts.
-- [ ] [CÓDIGO] Registrar P50/P95/P99, vazão, CPU, RAM, bytes transmitidos e violações de prazo. O piloto local já cobre percentis, vazão e RSS de carregamento; CPU, bytes e prazo dependem do benchmark cliente–servidor.
-- [x] [CÓDIGO] Como piloto local, realizar cinco repetições, 200 chamadas de aquecimento e 5.000 medições individuais por modelo; a bancada cliente–servidor ainda definirá duração por configuração.
-- [ ] [CÓDIGO] Aleatorizar a ordem dos modelos/perfis; registrar temperatura e atividade concorrente quando relevantes.
+- [x] [CÓDIGO] Registrar sucessos e falhas, P50/P95/P99, vazão, CPU e RAM. Não definir prazo operacional sem requisito externo.
+- [x] [CÓDIGO] Realizar cinco repetições, 200 chamadas de aquecimento e 5.000 medições HTTP individuais por modelo, além de 600 chamadas em lote e 4.500 chamadas de throughput.
+- [x] [CÓDIGO] Executar em ordem determinística registrada; tratar temperatura e atividade externa não controladas como limitação da bancada local.
 - [x] [CÓDIGO] Preservar medições individuais em formato estruturado; tabelas foram geradas delas.
-- [ ] [REVISÃO] Só afirmar consumo de energia se houver medição de potência/energia com equipamento e intervalo definidos. CPU, RAM e FLOPs não são consumo de bateria.
+- [x] [REVISÃO] Não afirmar consumo de energia ou bateria: a bancada mede CPU e RAM, sem instrumento de potência.
 
 **Critério de conclusão F7:** há evidência de que carga, limites e perfis foram efetivamente aplicados, além de medições reproduzíveis e fronteiras claras do tempo medido.
 
-## 10. F8 — Contexto condicionado por metadados e extensões opcionais
+## 10. F8 — Extensões retiradas desta versão
 
-O experimento de contexto E3 é central, mas sua forma temporal ou em grafos depende dos metadados disponíveis. Encaminhamento seletivo, federação e ataques desconhecidos continuam opcionais.
-
-### Encaminhamento seletivo para a borda
-
-- [ ] [MANUAL] Fazer busca específica de novidade em inferência seletiva, offloading e cascatas de IDS antes de propor algoritmo novo.
-- [ ] [CÓDIGO] Comparar sempre local, sempre borda, regra fixa e encaminhamento por confiança/rede.
-- [ ] [CÓDIGO] Calibrar probabilidades e selecionar limiares apenas em desenvolvimento. [Documentação de calibração](https://scikit-learn.org/stable/modules/calibration.html).
-- [ ] [CÓDIGO] Incluir custo do modelo local, calibração, decisão, comunicação e modelo remoto.
-- [ ] [CÓDIGO] Definir fallback em timeout e contabilizar casos sem decisão. Não calcular F1 apenas nos casos fáceis atendidos.
-- [ ] [CÓDIGO] Reportar cobertura, qualidade entre atendidos, qualidade do sistema completo, taxa de encaminhamento e cumprimento de prazo por classe.
-
-### Contexto temporal ou GNN
-
-- [ ] [MANUAL] Confirmar timestamps/sessões com R1/R2. Sem isso, não chamar janelas de linhas consecutivas de sequência temporal real.
-- [ ] [CÓDIGO] Dividir sessões/execuções antes de criar janelas; impedir compartilhamento de registros brutos entre partições, incluindo a janela de observação e horizonte do rótulo.
-- [ ] [CÓDIGO] Garantir que a informação de uma predição já estava disponível naquele instante.
-- [ ] [CÓDIGO] Definir se o grafo representa comunicação entre IPs ou topologia física; o primeiro não prova o segundo.
-- [ ] [CÓDIGO] Definir tarefa de nó, aresta ou grafo e como compará-la à tarefa tabular.
-- [ ] [CÓDIGO] Avaliar uma árvore/MLP com estatísticas do mesmo contexto para separar representação de arquitetura.
-- [ ] [CÓDIGO] Declarar cenário indutivo ou transdutivo e acesso a nós/arestas não rotulados de teste. Não misturar os dois na conclusão.
-- [ ] [CÓDIGO] Incluir coleta e construção do grafo na medição completa, não só forward da rede.
-
-### Aprendizado federado e votação
-
-- [ ] [MANUAL] Adicionar apenas se houver orçamento e pergunta específica; uma publicação posterior pode ser mais adequada.
-- [ ] [CÓDIGO] Comparar a mesma MLP centralizada, treinada apenas localmente e federada, com mesma população e orçamento descrito.
-- [ ] [CÓDIGO] Dividir teste antes de distribuir treino entre clientes; registrar mapeamento e sobreposição zero entre seus exemplos privados.
-- [ ] [CÓDIGO] Distinguir clientes artificiais de UAVs identificados nos dados. Partição não IID artificial não demonstra heterogeneidade física real.
-- [ ] [CÓDIGO] Comparar IID e não IID com mecanismos/sementes fixos; não duplicar exemplos entre clientes para fabricar vantagem.
-- [ ] [CÓDIGO] Separar agregador de defesa. Se a defesa substituir FedAdam/FedYogi, nomear o algoritmo efetivamente executado.
-- [ ] [CÓDIGO] Definir ameaça, capacidade do atacante, fração comprometida, ataques e acesso à informação. Não usar identidade verdadeira dos atacantes na defesa avaliada, exceto como limite ideal explicitamente identificado.
-- [ ] [CÓDIGO] Para votação, usar detectores distintos ou justificar correlações. Replicar uma previsão com ruído é controle sintético, não enxame independente.
-- [ ] [CÓDIGO] Medir comunicação e duração das rodadas separadamente da inferência.
-
-### Ataques não vistos e novos cenários
-
-- [ ] [CONDICIONAL] Se seguir R6, reservar famílias completas também fora de tuning/calibração conforme a hipótese; declarar precisamente quais ataques orientaram seleção.
-- [ ] [CONDICIONAL] Não chamar confiança baixa de prova de detecção zero-day.
-- [ ] [CONDICIONAL] Gerar cenários NS-3 independentes apenas com extrator e rótulos validados; preservar seeds e configurações.
-- [ ] [CONDICIONAL] Se usar outro dataset, justificar compatibilidade de unidades, tarefas e atributos. Retreinar do zero em outro dataset é replicação, não transferência direta do mesmo modelo.
+CNN, GNN, modelos temporais, stacking, outros datasets, inferência na borda, `tc-netem`, Kubernetes, aprendizado federado e ataques não vistos não participam dos experimentos nem sustentam as conclusões. R2, R4, R6 e R7 podem ser discutidos como literatura relacionada e motivação de controles, sempre distinguindo resultados publicados de resultados obtidos neste repositório.
 
 ## 11. F9 — Estatística e interpretação
 
-- [ ] [MANUAL] Fixar contraste principal, por exemplo diferença de F1-macro entre RF e stacking em S1, e contrastes secundários antes da análise final.
+- [ ] [MANUAL] Fixar como contraste principal a diferença pareada de F1-macro entre XGBoost e Random Forest em S2; tratar custo Docker como contraste operacional complementar.
 - [ ] [MANUAL] Definir diferença mínima de interesse prático no desenvolvimento, incluindo ganho de qualidade e custo aceitável. Não escolhê-la depois de conhecer o resultado.
 - [ ] [CÓDIGO] Comparar modelos nos mesmos exemplos/folds e reportar diferenças absolutas, não só porcentagem relativa.
 - [ ] [CÓDIGO] Calcular F1 das predições e descrever como folds/seeds são resumidos. Média dos F1 de folds e F1 de predições concatenadas não são idênticos.
@@ -620,16 +514,14 @@ modifique o protocolo para obter métricas mais altas.
 
 ### Estrutura proposta do artigo
 
-1. Introdução: tensão entre redes compactas, árvores quase perfeitas e modelos com contexto; perguntas e contribuições efetivamente demonstradas.
-2. Trabalhos relacionados: R4 como contraponto neural leve, R7 como contraponto multi-dataset e R2 como contraponto relacional/temporal; protocolos e lacuna confirmada.
-3. Dados e ameaças de validade: origem, atributos, `FlowID`, grupos, diferenças entre os datasets e auditoria.
+1. Introdução: risco de resultados quase perfeitos associados a identificadores e necessidade de avaliar simultaneamente generalização e custo de atendimento.
+2. Trabalhos relacionados: benchmark original, alegações de Random Forest quase perfeito e estudos de implantação eficiente tratados apenas como contexto.
+3. Dados e ameaças de validade: origem, atributos, `FlowID`, grupos e auditoria.
 4. Método experimental comum: splits, tuning, informação equivalente, métricas, custo e análise estatística.
-5. E1 — Redes compactas versus árvores: modelos, ablações e benchmark computacional.
-6. E2 — Suficiência do RF em múltiplos datasets: reprodução fiel, reprodução corrigida e limites de comparabilidade/transferência.
-7. E3 — Valor do contexto: agregados tabulares versus representação relacional/temporal e custo da janela/grafo.
-8. Implantação local versus borda: posições, rede, recursos, carga e falhas para modelos selecionados.
-9. Discussão: qual hipótese foi sustentada em cada eixo, escolhas operacionais e generalização possível.
-10. Limitações, disponibilidade de artefatos e conclusão sem extrapolação.
+5. Resultados preditivos: S0/S1/S2, ablação de `FlowID`, tuning e estabilidade de RF/XGBoost.
+6. Benchmark Docker local: latência HTTP e interna, lotes, throughput, CPU, RAM e tamanho dos artefatos.
+7. Discussão: fronteira qualidade–custo, limites de generalização e implicações da dependência de identificadores.
+8. Limitações, disponibilidade de artefatos e conclusão sem extrapolação.
 
 ### Critérios para considerar o estudo pronto para redação final
 
@@ -638,26 +530,23 @@ modifique o protocolo para obter métricas mais altas.
 - [ ] Splits e pré-processamento respeitam o protocolo em todos os níveis.
 - [ ] Resultados podem ser recalculados e possuem incerteza adequadamente interpretada.
 - [ ] A latência inclui fronteiras de medição claras e falhas visíveis.
-- [ ] O ganho de complexidade foi testado por ablação e custo.
+- [ ] A escolha entre RF e XGBoost foi examinada em qualidade, estabilidade e custo local.
 - [ ] Limitações de timestamps, identidade, simulação e hardware estão declaradas.
 - [ ] Material de terceiros e auxílio de IA têm proveniência.
 - [ ] Nenhum valor esperado, ilustrativo ou herdado do projeto antigo aparece como resultado novo.
 
 ## 14. Primeiras ações práticas, em ordem
 
-1. [ ] Criar repositório/ambiente novo e guardar apenas referências necessárias do trabalho antigo.
-2. [ ] Preencher `scope.md` e escolher o núcleo sem extensões.
-3. [ ] Baixar dataset da fonte escolhida e registrar checksum/licença.
-4. [ ] Obter R1–R4 e R7 completos; recuperar URLs/autoria dos dois notebooks Kaggle.
-5. [ ] Enviar manualmente solicitações de metadados/código e registrar pendências.
-6. [ ] Construir matriz de literatura e auditoria reproduzível dos dados.
-7. [ ] Decidir CSV-only ou cenário com metadados; obter Drone IDS/ICSCASD-MPLC somente de fontes confirmadas.
-8. [ ] Congelar S0/S1/S2 viáveis, métricas e orçamento antes de gerar código de treino extensivo.
-9. [ ] Implementar Dummy, regressão logística e RF com testes metodológicos.
-10. [ ] Completar Extra Trees, boosting, MLP e CNN residual; executar piloto de custo e decidir se stacking permanece como baseline secundário.
-11. [ ] Executar E1 e E2; implementar E3 relacional/temporal apenas na forma autorizada pelos metadados disponíveis.
-12. [ ] Congelar plano final de implantação e executar a bancada local versus borda.
-13. [ ] Considerar encaminhamento seletivo ou federação somente após responder às perguntas do núcleo.
+1. [x] Auditar o CSV local e registrar checksum, schema e limitações.
+2. [x] Congelar S0/S1/S2, métricas e contratos de atributos.
+3. [x] Executar baselines, ablação de `FlowID`, tuning e estabilidade.
+4. [x] Congelar Random Forest e XGBoost para a comparação operacional.
+5. [x] Executar e validar o benchmark Docker local v2.
+6. [ ] Fechar a matriz de literatura, autoria dos notebooks e diferenças em relação a R1–R4/R7.
+7. [ ] Definir contrastes, margens práticas e análise de incerteza sem usar requisições correlacionadas como réplicas independentes.
+8. [ ] Gerar tabelas e figuras finais diretamente dos artefatos preservados.
+9. [ ] Reescrever o artigo no escopo final e conferir cada alegação contra sua fonte.
+10. [ ] Reproduzir ao menos um fluxo completo em ambiente limpo e preparar o pacote de submissão.
 
 ## 15. Documentações oficiais de consulta
 
@@ -668,13 +557,9 @@ As páginas `stable` podem mudar. No novo ambiente, registrar a versão instalad
 | Pipelines e vazamento | [scikit-learn: common pitfalls](https://scikit-learn.org/stable/common_pitfalls.html) |
 | Divisões e grupos | [scikit-learn: cross-validation](https://scikit-learn.org/stable/modules/cross_validation.html) |
 | Seleção versus avaliação | [scikit-learn: nested CV](https://scikit-learn.org/stable/auto_examples/model_selection/plot_nested_cross_validation_iris.html) |
-| Stacking e OOF | [StackingClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingClassifier.html) |
 | Probabilidades | [scikit-learn: calibration](https://scikit-learn.org/stable/modules/calibration.html) |
 | Métricas | [scikit-learn: model evaluation](https://scikit-learn.org/stable/modules/model_evaluation.html) |
 | Restrições de recursos | [Docker Engine](https://docs.docker.com/engine/containers/resource_constraints/) |
-| Emulação de rede | [tc-netem](https://man7.org/linux/man-pages/man8/tc-netem.8.html) |
-| Medição neural | [PyTorch benchmark](https://docs.pytorch.org/tutorials/recipes/recipes/benchmark.html) |
-| Reprodutibilidade neural | [PyTorch randomness](https://docs.pytorch.org/docs/stable/notes/randomness.html) |
 | Extração de fluxos na simulação | [NS-3 FlowMonitor](https://www.nsnam.org/docs/models/html/flow-monitor.html) |
 
 **Regra final:** escolher a conclusão a partir do experimento executado; nunca escolher ou alterar o experimento para sustentar uma conclusão já escrita.
