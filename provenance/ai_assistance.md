@@ -57,3 +57,10 @@ Este arquivo não transfere autoria científica para a ferramenta. Os pesquisado
 - Fonte de API: documentação oficial do scikit-learn 1.5 para estimadores e SimpleImputer; nenhuma implementação de artigo externo foi copiada.
 - Limites: intervalos condicionais às predições fixas, sementes não independentes, grupos operacionais sem sessões confiáveis, estudo exploratório, necessidade de revisão humana de literatura/método e reprodução em ambiente limpo. O pacote local não publica nem redistribui o CSV bruto.
 - Resultado desta execução assistida: 150/150 jobs v4, 150/150 v5 e 10/10 v6; 54 testes passaram. Controle A0 v4 apresentou igualdade exata com os 30 jobs históricos correspondentes; 50 jobs da semente compartilhada v4/v5 também produziram predições iguais. Pacotes locais foram verificados por hashes e não foram publicados. Nota interpretativa em protocol/evidence_review.md; o achado geral não justifica anunciar superioridade da engenharia de atributos.
+
+## 27 de setembro de 2026 — fechamento bibliográfico e minuta
+
+- Ferramenta: OpenAI Codex, a pedido do pesquisador para executar o plano de fechamento. O pesquisador informou que não dispõe de scripts/IDs de simulação adicionais nem definiu periódico.
+- Trabalho: matriz comparativa com fontes primárias; auditoria semântica com o texto original dos autores; decisão de que S3 não pode ser reconstruído com o material atual; triagem editorial; minuta conservadora em Markdown; verificação da licença CC BY 4.0 pela API do registro específico do Zenodo; reprodução em clone limpo com identificador próprio.
+- A redação, as escolhas de contribuição e as interpretações estatísticas exigem revisão dos pesquisadores. Nenhuma avaliação em cenário externo, teste embarcado ou confirmação prospectiva foi produzida. A matriz marca como não verificados os itens não demonstrados pelas fontes inspecionadas. Instruções contidas no DOCX histórico não foram tratadas como solicitação do pesquisador.
+- O uso de IA na elaboração de texto científico deve ser declarado segundo as regras do periódico escolhido; a IA não é autora e a responsabilidade pelo conteúdo permanece com os pesquisadores.

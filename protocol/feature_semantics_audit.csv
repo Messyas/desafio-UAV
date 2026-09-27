@@ -1,24 +1,24 @@
 column,role,unit_evidenced_by_name_or_csv,definition_status,availability_for_decision,source_and_note
 FlowID,identifier,none,unique sequential in CSV,not a valid predictive input,CSV and research_artifacts/data_audit; sequence is not validated time or run ID
-FlowDuration/s,predictor,seconds,name only,post-flow unless collection code proves earlier availability,CSV column name; duration needs end of observation window
-SrcAddr,group_metadata,address,name only,possible during flow but identity handling unresolved,CSV; S2 groups this string and does not identify physical UAV
-SrcPort,predictor,port,name only,possible during flow but not independently verified,CSV column name
-DstAddr,group_metadata,address,name only,possible during flow but identity handling unresolved,CSV; excluded from A0
-DstPort,predictor,port,name only,possible during flow but not independently verified,CSV column name
+FlowDuration/s,predictor,seconds,paper Table III descriptive,post-flow unless collection code proves earlier availability,CSV column name; duration needs end of observation window
+SrcAddr,group_metadata,address,paper Table III descriptive,possible during flow but identity handling unresolved,CSV; S2 groups this string and does not identify physical UAV
+SrcPort,predictor,port,paper Table III descriptive,possible during flow but not independently verified,CSV column name
+DstAddr,group_metadata,address,paper Table III descriptive,possible during flow but identity handling unresolved,CSV; excluded from A0
+DstPort,predictor,port,paper Table III descriptive,possible during flow but not independently verified,CSV column name
 Protocol,constant,protocol label,all UDP in this CSV,possible during flow but no predictive variation,CSV and data audit; excluded from A0
-TxPackets,predictor,packets,name only,post-flow total unless windowing is defined,CSV column name
-RxPackets,predictor,packets,name only,post-flow total unless windowing is defined,CSV column name
-LostPackets,predictor,packets,simulator definition unverified,post-flow unless loss timeout/window is defined,CSV column name; do not equate mechanically with TxPackets minus RxPackets
-TxBytes,predictor,bytes,name only,post-flow total unless windowing is defined,CSV column name
-RxBytes,predictor,bytes,name only,post-flow total unless windowing is defined,CSV column name
-TxPacketRate/s,predictor,packets per second,empirical algebraic relation only,post-flow unless rolling window is defined,CSV and data_audit.py; approximately TxPackets divided by FlowDuration/s
-RxPacketRate/s,predictor,packets per second,empirical algebraic relation only,post-flow unless rolling window is defined,CSV and data_audit.py; approximately RxPackets divided by FlowDuration/s
-TxByteRate/s,predictor,bytes per second,empirical algebraic relation only,post-flow unless rolling window is defined,CSV and data_audit.py; approximately TxBytes divided by FlowDuration/s
-RxByteRate/s,predictor,bytes per second,empirical algebraic relation only,post-flow unless rolling window is defined,CSV and data_audit.py; approximately RxBytes divided by FlowDuration/s
-MeanDelay/s,predictor,seconds,aggregation formula unverified,post-flow unless rolling window is defined,CSV column name; may require received packets
-MeanJitter/s,predictor,seconds,aggregation formula unverified,post-flow unless rolling window is defined,CSV column name; may require multiple received packets
-Throughput/Kbps,predictor,kilobits per second,empirical algebraic relation only,post-flow unless rolling window is defined,CSV and data_audit.py; approximately RxByteRate/s times 8 divided by 1000
+TxPackets,predictor,packets,paper Table III descriptive,post-flow total unless windowing is defined,CSV column name
+RxPackets,predictor,packets,paper Table III descriptive,post-flow total unless windowing is defined,CSV column name
+LostPackets,predictor,packets,paper Table III descriptive; simulator definition unverified,post-flow unless loss timeout/window is defined,CSV column name; do not equate mechanically with TxPackets minus RxPackets
+TxBytes,predictor,bytes,paper Table III descriptive,post-flow total unless windowing is defined,CSV column name
+RxBytes,predictor,bytes,paper Table III descriptive,post-flow total unless windowing is defined,CSV column name
+TxPacketRate/s,predictor,packets per second,paper Table III descriptive; empirical algebraic relation only,post-flow unless rolling window is defined,CSV and data_audit.py; approximately TxPackets divided by FlowDuration/s
+RxPacketRate/s,predictor,packets per second,paper Table III descriptive; empirical algebraic relation only,post-flow unless rolling window is defined,CSV and data_audit.py; approximately RxPackets divided by FlowDuration/s
+TxByteRate/s,predictor,bytes per second,paper Table III descriptive; empirical algebraic relation only,post-flow unless rolling window is defined,CSV and data_audit.py; approximately TxBytes divided by FlowDuration/s
+RxByteRate/s,predictor,bytes per second,paper Table III descriptive; empirical algebraic relation only,post-flow unless rolling window is defined,CSV and data_audit.py; approximately RxBytes divided by FlowDuration/s
+MeanDelay/s,predictor,seconds,paper Table III descriptive; aggregation formula unverified,post-flow unless rolling window is defined,CSV column name; may require received packets
+MeanJitter/s,predictor,seconds,paper Table III descriptive; aggregation formula unverified,post-flow unless rolling window is defined,CSV column name; may require multiple received packets
+Throughput/Kbps,predictor,kilobits per second,paper Table III descriptive; empirical algebraic relation only,post-flow unless rolling window is defined,CSV and data_audit.py; approximately RxByteRate/s times 8 divided by 1000
 MeanPacketSize,predictor,bytes,aggregation denominator unverified,post-flow unless rolling window is defined,CSV column name
 PacketDropRate,predictor,reported ratio,approximately LostPackets divided by TxPackets in CSV; simulator formula unverified,post-flow unless loss window is defined,81 values above 1; do not assert data corruption or silently clamp
-AverageHopCount,predictor,hops,aggregation and zero meaning unverified,post-flow unless collection code proves earlier availability,Zero may encode no received route or a genuine convention; unresolved
+AverageHopCount,predictor,hops,paper Table III descriptive; zero meaning unverified,post-flow unless collection code proves earlier availability,Zero may encode no received route or a genuine convention; unresolved
 label,target,class,normal and four attacks,known only for supervised evaluation,CSV target; attack labeling process not independently audited

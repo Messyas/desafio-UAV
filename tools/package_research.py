@@ -83,13 +83,13 @@ def package(config_path):
             reference_output / "experiment_manifest.json"))
         files.add(report / "sensitivity_manifest.json")
     for folder in ("src/uavids_study", "protocol", "provenance", "tests"):
-        files.update(path for path in (ROOT / folder).rglob("*") if path.is_file() and path.suffix in {".py", ".md", ".json"})
+        files.update(path for path in (ROOT / folder).rglob("*") if path.is_file() and path.suffix in {".py", ".md", ".json", ".csv"})
     files.update((ROOT / "tools").glob("*.py"))
     files.update((ROOT / "research_artifacts/data_audit").glob("*.csv"))
     files.add(ROOT / "research_artifacts/data_audit/data_manifest.json")
     files.update((ROOT / "research_artifacts/derived_features").glob("*.json"))
     files.update((ROOT / "research_artifacts/derived_features").glob("*.csv"))
-    for name in ("requirements-research.txt", "requirements-tracking.txt", "README.md", "RESEARCH_WORKFLOW.md", "PLANO_CIENTIFICO_UAVIDS2025.md"):
+    for name in ("requirements-research.txt", "requirements-tracking.txt", "README.md", "RESEARCH_WORKFLOW.md", "PLANO_CIENTIFICO_UAVIDS2025.md", "PLANO_FECHAMENTO_ARTIGO.md", "MANUSCRIPT_DRAFT.md"):
         files.add(ROOT / name)
     # Reference configs are needed to verify the baseline identity in a clean clone.
     files.update((ROOT / "configs").glob("*.json"))
@@ -116,7 +116,7 @@ def package(config_path):
         "dataset_sha256": frozen["identity"]["dataset_sha256"],
         "raw_data_included": False, "files_sha256": entries,
         "reference_experiment": analysis.get("reference_experiment"),
-        "limits": "Local bundle only. Obtain canonical data via tools/fetch_dataset.py; review licenses before public deposit."}
+        "limits": "Local bundle only. Obtain canonical CC BY 4.0 data via tools/fetch_dataset.py; attribute creators and verify rights of other materials before public deposit."}
     destination = ROOT / "research_artifacts/releases"
     destination.mkdir(parents=True, exist_ok=True)
     path = destination / (config["experiment_id"] + "__" + "_".join(analysis["protocols"]) + ".zip")

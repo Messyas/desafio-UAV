@@ -1,0 +1,11 @@
+# Triagem de periódico (27-09-2026)
+
+Nenhum periódico foi escolhido pelo autor. Não atribuir estrato A2 por memória ou por agregadores: consultar ISSN, área e ciclo diretamente na [Plataforma Sucupira da CAPES](https://sucupira-legado.capes.gov.br/sucupira/public/consultas/coleta/veiculoPublicacaoQualis/listaConsultaGeralPeriodicos.jsf) antes de decidir. O estrato depende da classificação consultada; escopo, custo e regras editoriais devem ser reconferidos na submissão.
+
+| Periódico | Evidência de escopo | Avaliação do encaixe atual | Pendente |
+|---|---|---|---|
+| [IEEE Access](https://ieeeaccess.ieee.org/about/) | O escopo oficial aceita estudos aplicados, experimentos e resultados negativos, desde que originais e tecnicamente sólidos. | Candidato a examinar para uma auditoria de benchmark; revisão seletiva e APC de acesso aberto exigem decisão do autor. | Qualis/área/ciclo, orçamento, contribuição após reprodução. [Regras de submissão](https://ieeeaccess.ieee.org/authors/submission-guidelines/) exigem template Word/LaTeX e PDF, e divulgação de texto gerado por IA. |
+| [Journal of Information Security and Applications](https://shop.elsevier.com/journals/journal-of-information-security-and-applications/2214-2126) | Escopo oficial inclui pesquisa original e aplicações de segurança com contribuição técnica. | Possível, mas uma única base simulada e diferenças de F1 pequenas deixam a novidade frágil; conferir se um estudo de validade de benchmark é aceito. | Qualis/área/ciclo, guia do autor, política de dados/código, taxas e artigos comparáveis recentes. |
+| [Computers & Security](https://shop.elsevier.com/journals/computers-and-security/0167-4048) | A página oficial informa moratória, desde 2024, para submissões cujo componente significativo seja aplicar IA/ML a segurança. | **Não selecionar** para o manuscrito atual de classificadores ML. | Só reavaliar se o escopo editorial mudar e a contribuição deixar de ser a aplicação de ML. |
+
+Não converter esta triagem em promessa de A2 ou de aceite. A primeira decisão científica é se a análise restrita a UAVIDS-2025 acrescenta conhecimento suficiente frente a Zarkadis e Demir/Gumus. Sem nova população independente, uma revista seletiva pode rejeitar por contribuição limitada, mesmo com execução e relato corretos.

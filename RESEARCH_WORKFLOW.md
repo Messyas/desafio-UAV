@@ -75,6 +75,7 @@ O pacote dessa sensibilidade inclui também os dez controles A0 S2 v4 necessári
 
 ```powershell
 .\.venv-research\Scripts\python.exe tools\package_research.py
+.\.venv-research\Scripts\python.exe tools\verify_research_bundle.py research_artifacts\releases\feature_ablation_v4__S0_S1_S2.zip
 ```
 
 Gera ZIP local em research_artifacts/releases/, com manifesto SHA-256 e escopo explícito dos protocolos efetivamente completos. Inclui código, configurações, folds, predições e relatórios; o CSV bruto é obtido da fonte canônica, sem redistribuição neste ZIP. Revisão de licenças e publicação permanecem etapas humanas posteriores.
