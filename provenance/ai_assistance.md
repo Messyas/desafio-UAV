@@ -35,3 +35,14 @@ Este arquivo não transfere autoria científica para a ferramenta. Os pesquisado
 - A IA propôs não ampliar o tuning após o resultado externo: RF ganhou menos de 0,001 em média e XGBoost não ganhou.
 - A IA propôs XGBoost como candidato operacional por qualidade média, tamanho e latência local, mantendo RF como comparador.
 - Docker foi apenas verificado. Nenhuma medição de rede, container, CPU limitada, energia ou hardware embarcado foi produzida nesta etapa.
+
+## 26 de setembro de 2026 — reorganização do estudo
+
+- Ferramenta: OpenAI Codex; assistência na revisão de estrutura, implementação e documentação.
+- Pedido do pesquisador: limpar o repositório, retirar DVC, usar MLflow como apoio e planejar experimentação acadêmica revisada.
+- Trabalho: arquivo histórico em `archive/`, ambiente `.venv-research`, obtenção do dataset com checksum, exportação opcional de tracking, reconstrução de métricas e proteção da retomada por identidade dos dados/splits.
+- Correção metodológica: normalização de confusão OOF agora usa população separada por semente; predições brutas não foram modificadas.
+- Plano proposto: cinco classes principais; ablação de três atributos com controles pareados e parâmetros do baseline fixos; análise de grupos e limites da exposição histórica; Docker complementar.
+- Fontes de API: documentação oficial de tracking do MLflow e documentação de validação cruzada do scikit-learn 1.5. Nenhum código de notebook de terceiro foi copiado.
+- Verificações: testes de integridade e casos sintéticos, checksums dos 105 jobs do baseline e validação das métricas salvas. A ablação ainda não foi implementada/executada.
+- Revisão científica pendente: contribuição frente à literatura, semântica/causalidade dos atributos, método de incerteza, dados externos e veículo de publicação.

@@ -27,3 +27,16 @@ Para cada alteração futura, registrar: data, regra anterior, regra nova, motiv
 - Informação consultada: 5.000 registros individuais por modelo do piloto `docker_local_v1`, comparando `client_duration_ns`, `server_predict_ns` e `server_queue_wait_ns`.
 - Etapa: após o piloto v1 e antes de qualquer uso dos números no artigo.
 - Risco: a v1 e a v2 não são combináveis; somente a v2 será tratada como benchmark final. O transporte continua sendo loopback Docker Desktop/WSL2, não uma rede UAV.
+
+## 26 de setembro de 2026 — reorganização acadêmica e correção de agregação
+
+- Pedido do pesquisador: retirar DVC, simplificar o repositório e manter MLflow como ferramenta útil aos experimentos.
+- Mudança de escopo: identificadores, populações S0/S1/S2 e ablação dos atributos formam o núcleo. Custo em processo é complementar; Docker/HTTP deixa de ser eixo obrigatório.
+- Material antigo de produção e notebooks exploratórios movidos para `archive/`. Configurações executadas, CSV bruto, splits, modelos e predições foram preservados. O plano anterior foi arquivado.
+- DVC substituído por obtenção da fonte canônica e verificação SHA-256. CSV local já existente não é substituído silenciosamente.
+- Problema corrigido: a normalização de `confusion_pooled_oof.csv` agrupava por protocolo/modelo/classe verdadeira, omitindo a semente. Com três sementes, cada linha somava aproximadamente 1/3 em vez de 1. A correção usa denominador independente por semente. Contagens e predições não mudam.
+- Reconstrução: `tools/rebuild_metrics.py` verifica hashes e métricas por job antes de reconstruir agregados. Ambiente de treinamento histórico permanece no manifesto; ambiente/data da agregação são registrados à parte.
+- Proteção nova: retomada recusa alteração de CSV ou partições, mesmo que FlowID e quantidade de linhas permaneçam iguais. Identidade também é persistida antes do primeiro job.
+- MLflow recebe cópias dos jobs existentes por exportador opcional. Não seleciona modelos, não promove versões e não retreina. CSV/JSON são a fonte científica.
+- Os artefatos e resultados já foram examinados. A ablação prevista é exploratória; esta revisão não cria teste intocado. Nenhum novo treinamento foi apresentado como resultado desta limpeza.
+- Ambiente de verificação: Python 3.12.14, com versões científicas de `requirements-research.txt`; o `.venv` antigo referencia Python 3.12.10 em caminho indisponível.

@@ -1,0 +1,3 @@
+# Optional local experiment tracking; independent from the scientific outputs.
+-r requirements-research.txt
+mlflow==3.12.0

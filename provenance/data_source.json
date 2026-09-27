@@ -1,0 +1,16 @@
+{
+  "dataset": "UAVIDS-2025",
+  "version": "Zenodo v1",
+  "landing_page": "https://zenodo.org/records/15336998",
+  "download_url": "https://zenodo.org/records/15336998/files/UAVIDS-2025.csv?download=1",
+  "dataset_doi": "10.5281/zenodo.15336998",
+  "paper_doi": "10.1109/CNS66487.2025.11194990",
+  "filename": "UAVIDS-2025.csv",
+  "destination": "notebooks/data/raw/UAVIDS-2025.csv",
+  "bytes": 20054667,
+  "rows": 122171,
+  "columns": 23,
+  "md5": "ec84ed5390d5de42b07e8a011709ff82",
+  "sha256": "d50d339f68be7b23f0bf089dd438b20a1835c13182d8641220538121440164d0",
+  "license_status": "Confirm the license on the canonical record before redistribution"
+}

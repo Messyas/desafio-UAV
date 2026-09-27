@@ -18,6 +18,8 @@ ARTIFACT_DIR = PROJECT_ROOT / "research_artifacts" / "data_audit"
 class DataAuditArtifactTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        if not (ARTIFACT_DIR / "data_manifest.json").exists():
+            raise unittest.SkipTest("Generate data audit artifacts before this verification")
         cls.summary = json.loads(
             (ARTIFACT_DIR / "data_audit_summary.json").read_text(encoding="utf-8")
         )

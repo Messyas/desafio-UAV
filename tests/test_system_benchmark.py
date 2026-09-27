@@ -16,6 +16,7 @@ DOCKER_BENCHMARK_DIR = ROOT / "benchmarks" / "docker_local_v2"
 
 
 class SystemBenchmarkTests(unittest.TestCase):
+    @unittest.skipUnless((ARTIFACT_DIR / "manifest.json").exists(), "Freeze benchmark models first")
     def test_frozen_model_hashes_and_schema(self) -> None:
         manifest = json.loads((ARTIFACT_DIR / "manifest.json").read_text("utf-8"))
         schema = json.loads((ARTIFACT_DIR / "schema.json").read_text("utf-8"))
@@ -27,6 +28,7 @@ class SystemBenchmarkTests(unittest.TestCase):
             observed = hashlib.sha256(path.read_bytes()).hexdigest()
             self.assertEqual(observed, model["sha256"])
 
+    @unittest.skipUnless((BENCHMARK_DIR / "manifest.json").exists(), "Generate local benchmark first")
     def test_local_benchmark_is_complete_and_raw_counts_match(self) -> None:
         manifest = json.loads((BENCHMARK_DIR / "manifest.json").read_text("utf-8"))
         self.assertTrue(manifest["complete"])
@@ -39,6 +41,7 @@ class SystemBenchmarkTests(unittest.TestCase):
             self.assertTrue((individual["duration_ns"] > 0).all())
             self.assertTrue((batches["duration_ns"] > 0).all())
 
+    @unittest.skipUnless((DOCKER_BENCHMARK_DIR / "manifest.json").exists(), "Optional Docker benchmark absent")
     def test_docker_benchmark_is_complete_hashed_and_resource_limited(self) -> None:
         manifest = json.loads(
             (DOCKER_BENCHMARK_DIR / "manifest.json").read_text("utf-8")

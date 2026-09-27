@@ -27,6 +27,7 @@ if __package__ in {None, ""}:
         file_hash,
         json_hash,
         predictive_metrics,
+        validate_experiment_inputs,
         write_aggregates,
         write_gzip_csv,
         write_json,
@@ -39,6 +40,7 @@ else:
         file_hash,
         json_hash,
         predictive_metrics,
+        validate_experiment_inputs,
         write_aggregates,
         write_gzip_csv,
         write_json,
@@ -341,6 +343,7 @@ def run_nested_experiment(
     split_path = project_root / "research_artifacts" / "data_audit" / "split_candidates.csv.gz"
     output_dir = project_root / "results" / config["experiment_id"]
     output_dir.mkdir(parents=True, exist_ok=True)
+    validate_experiment_inputs(dataset_path, split_path, output_dir)
     data = pd.read_csv(dataset_path)
     splits = pd.read_csv(split_path)
     if len(data) != len(splits):

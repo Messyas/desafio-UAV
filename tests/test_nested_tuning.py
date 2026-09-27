@@ -58,6 +58,7 @@ class NestedTuningTests(unittest.TestCase):
         selected = select_candidate(candidates, tie_tolerance=0.0001)
         self.assertEqual(selected["candidate_id"], "small")
 
+    @unittest.skipUnless((RESULT_DIR / "experiment_manifest.json").exists(), "Generate nested tuning results first")
     def test_nested_experiment_is_complete_and_records_all_fits(self) -> None:
         manifest = json.loads(
             (RESULT_DIR / "experiment_manifest.json").read_text(encoding="utf-8")
@@ -75,6 +76,7 @@ class NestedTuningTests(unittest.TestCase):
                 self.assertEqual(len(record["warnings"]), 0)
         self.assertEqual(len(records), 10)
 
+    @unittest.skipUnless((RESULT_DIR / "experiment_manifest.json").exists(), "Generate nested tuning results first")
     def test_nested_oof_predictions_cover_each_row_once_per_model(self) -> None:
         for model in ("random_forest", "xgboost"):
             paths = sorted(

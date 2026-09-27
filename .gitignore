@@ -1,8 +1,12 @@
-# Dataset bruto (versionado pelo DVC)
+# Dataset bruto obtido da fonte canônica; identidade conferida por SHA-256.
 data/raw/UAVIDS-2025.csv
+notebooks/data/raw/UAVIDS-2025.csv
+*.part
 
 # MLflow artifacts grandes (modelos .pkl ficam fora do git)
 mlruns/
+mlartifacts/
+tracking/
 
 # Artefatos regeneráveis do estudo científico.
 # Os comandos e configurações para recriá-los estão em RESEARCH_WORKFLOW.md.
@@ -21,15 +25,15 @@ __pycache__/
 *.egg-info/
 .env
 
-# DVC cache
-.dvc/cache/
-.dvc/tmp/
+# Ambientes locais, inclusive o ambiente antigo não portável.
+.venv/
+.venv-*/
+venv/
 
-# DVC remote local (backup do dataset, fica fora do git)
-notebooks/data/dvcstore/
-
-#vev
-
-*.venv/
+# Histórico local de metadados obsoletos, sem utilidade para reprodução.
+archive/legacy/dvc/
+archive/legacy/dvcignore.txt
+archive/legacy/UAVIDS-2025.csv.dvc
+archive/legacy/REPOSITORIO.txt
 
 *.mp4

@@ -67,6 +67,7 @@ class PredictiveExperimentTests(unittest.TestCase):
             write_gzip_csv(second, frame)
             self.assertEqual(file_hash(first), file_hash(second))
 
+    @unittest.skipUnless((RESULT_DIR / "experiment_manifest.json").exists(), "Generate baseline results first")
     def test_full_experiment_manifest_is_complete(self) -> None:
         manifest = json.loads(
             (RESULT_DIR / "experiment_manifest.json").read_text(encoding="utf-8")
@@ -75,6 +76,7 @@ class PredictiveExperimentTests(unittest.TestCase):
         self.assertEqual(manifest["completed_jobs"], 105)
         self.assertEqual(manifest["completed_jobs"], manifest["expected_jobs"])
 
+    @unittest.skipUnless((RESULT_DIR / "experiment_manifest.json").exists(), "Generate baseline results first")
     def test_saved_oof_predictions_reproduce_random_forest_s0_metric(self) -> None:
         paths = sorted(
             (RESULT_DIR / "job_predictions").glob(

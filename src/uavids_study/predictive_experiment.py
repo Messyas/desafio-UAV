@@ -86,6 +86,50 @@ def write_gzip_csv(path: Path, frame: pd.DataFrame) -> None:
             frame.to_csv(gzip_stream, index=False, lineterminator="\n")
 
 
+def validate_experiment_inputs(
+    dataset_path: Path, split_path: Path, output_dir: Path
+) -> None:
+    """Refuse to resume against changed data or regenerated partitions."""
+    identity = {
+        "dataset_sha256": file_hash(dataset_path),
+        "split_sha256": file_hash(split_path),
+    }
+    audit_path = split_path.parent / "data_manifest.json"
+    if audit_path.exists():
+        audit = json.loads(audit_path.read_text(encoding="utf-8"))
+        expected = {
+            "dataset_sha256": audit["dataset"]["sha256"],
+            "split_sha256": audit["candidate_split_artifact"]["sha256"],
+        }
+        if identity != expected:
+            raise ValueError("Dataset or partitions differ from the data audit")
+    for name in ("input_identity.json", "experiment_manifest.json"):
+        path = output_dir / name
+        if path.exists():
+            stored = json.loads(path.read_text(encoding="utf-8"))
+            if any(stored.get(key) != value for key, value in identity.items()):
+                raise ValueError(
+                    "Cannot resume results with changed data or partitions; "
+                    "use a new experiment_id and document the deviation"
+                )
+    write_json(output_dir / "input_identity.json", identity)
+
+
+def normalize_confusion_rows(
+    frame: pd.DataFrame, group_columns: list[str]
+) -> pd.DataFrame:
+    """Normalize independently for each protocol/model/fold/seed population."""
+    output = frame.copy()
+    totals = output.groupby(group_columns + ["true_class_id"])["rows"].transform("sum")
+    output["true_class_fraction"] = np.divide(
+        output["rows"].to_numpy(dtype=float),
+        totals.to_numpy(dtype=float),
+        out=np.zeros(len(output), dtype=float),
+        where=totals.to_numpy() != 0,
+    )
+    return output
+
+
 def build_estimator(
     model_name: str,
     model_config: dict[str, Any],
@@ -404,9 +448,9 @@ def write_aggregates(
         class_metrics.to_csv(
             output_dir / "class_metrics_by_fold.csv", index=False, lineterminator="\n"
         )
-        confusions["true_class_fraction"] = confusions["rows"] / confusions.groupby(
-            ["protocol", "fold", "model", "seed", "true_class_id"]
-        )["rows"].transform("sum")
+        confusions = normalize_confusion_rows(
+            confusions, ["protocol", "fold", "model", "seed"]
+        )
         confusions.to_csv(
             output_dir / "confusion_matrices.csv", index=False, lineterminator="\n"
         )
@@ -487,11 +531,9 @@ def write_aggregates(
             output_dir / "class_metrics_pooled_oof.csv", index=False, lineterminator="\n"
         )
         pooled_confusions = pd.DataFrame(pooled_confusion_rows)
-        pooled_confusions["true_class_fraction"] = pooled_confusions[
-            "rows"
-        ] / pooled_confusions.groupby(
-            ["protocol", "model", "true_class_id"]
-        )["rows"].transform("sum")
+        pooled_confusions = normalize_confusion_rows(
+            pooled_confusions, ["protocol", "model", "seed"]
+        )
         pooled_confusions.to_csv(
             output_dir / "confusion_pooled_oof.csv", index=False, lineterminator="\n"
         )
@@ -563,6 +605,8 @@ def run_experiment(
     split_path = project_root / "research_artifacts" / "data_audit" / "split_candidates.csv.gz"
     output_dir = project_root / "results" / config["experiment_id"]
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    validate_experiment_inputs(dataset_path, split_path, output_dir)
 
     data = pd.read_csv(dataset_path)
     splits = pd.read_csv(split_path)
