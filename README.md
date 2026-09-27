@@ -23,6 +23,9 @@ O CSV vem do [depósito dos autores no Zenodo](https://zenodo.org/records/153369
 - [Plano revisado](PLANO_CIENTIFICO_UAVIDS2025.md): perguntas, evidências existentes, experimentos faltantes e critérios de interpretação.
 - [Fluxo de execução](RESEARCH_WORKFLOW.md): comandos de auditoria, treino, agregação e análise.
 - [Escopo vigente](protocol/scope.md): populações avaliadas e limites das conclusões.
+- [Ablação revisada](protocol/feature_ablation_v4.md): condições A0–A4, parâmetros fixos, bootstrap por grupos e sensibilidade secundária.
+- [Leitura crítica dos resultados](protocol/evidence_review.md): achados, limitações e critérios para o novo artigo.
+- [Plano de fechamento do artigo](PLANO_FECHAMENTO_ARTIGO.md): sequência, entregáveis e decisões antes da redação/submissão.
 - `src/uavids_study/`: implementação; `configs/`: parâmetros; `protocol/`: métodos e desvios.
 - `notebooks/research/`: análise narrativa; `tests/`: invariantes metodológicas e integridade.
 - `results/`: predições/registros; `reports/`: tabelas/figuras; `research_artifacts/`: auditoria/partições.
@@ -39,7 +42,15 @@ Existem auditoria, 105 jobs de baseline S0/S1/S2, 10 jobs de tuning aninhado e 3
 | S2 | Endereços de origem inéditos | Não comprova novos UAVs físicos |
 | S3 | Novas execuções/cenários | Indisponível sem metadados adicionais |
 
-Prioridades: conferir resultados salvos, avaliar derivadas por ablação e quantificar incerteza. Trocar seeds ou recomeçar código não cria teste historicamente intocado.
+O novo ciclo foi executado: v4 concluiu 150/150 jobs A0–A4 em S0/S1/S2; v5 concluiu 150/150 em três seeds S2; v6 concluiu 10/10 para a sensibilidade ao recorte de PacketDropRate. Manifestos e relatórios são a fonte dessas contagens. As derivadas não mostraram ganho geral relevante; a interpretação crítica está em protocol/evidence_review.md. Trocar seeds ou recomeçar código não cria teste historicamente intocado.
+
+```powershell
+.\.venv-research\Scripts\python.exe src\uavids_study\feature_ablation.py --protocols S2
+.\.venv-research\Scripts\python.exe src\uavids_study\paired_analysis.py --protocols S2
+.\.venv-research\Scripts\python.exe tools\build_ablation_report.py
+```
+
+O executor congela dados, folds, configuração, código e ambiente; a análise recusa OOF incompleto. As derivadas ficam no pipeline e a imputação usa somente o treino. A auditoria encontrou loss_ratio praticamente redundante com PacketDropRate; seu eventual efeito precisa ser medido, sem ser anunciado como novidade.
 
 ## MLflow opcional
 
@@ -48,6 +59,7 @@ MLflow serve para consultar e comparar experimentos. CSV/JSON e predições salv
 ```powershell
 uv pip install --python .venv-research/Scripts/python.exe -r requirements-tracking.txt
 .\.venv-research\Scripts\python.exe tools\export_mlflow.py --config configs\predictive_baseline_v1.json
+.\.venv-research\Scripts\python.exe tools\export_mlflow.py --config configs\feature_ablation_v4.json
 .\.venv-research\Scripts\mlflow.exe ui --backend-store-uri sqlite:///tracking/mlflow.db --port 5002
 ```
 

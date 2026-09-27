@@ -17,7 +17,7 @@ Revisão: 26 de setembro de 2026. A versão de 8 de setembro centralizava RF/XGB
 - S2: endereços de origem inéditos; não equivale a UAVs físicos nem garante destinos/assinaturas inéditos.
 - S3: execuções/cenários novos, condicionado a metadados confiáveis ausentes no CSV.
 
-Núcleo: identificadores, sensibilidade ao protocolo e contribuição das derivadas. RF/XGBoost são candidatos principais; demais modelos existentes são baselines exploratórios. Nova ablação ainda não implementada nem executada.
+Núcleo: identificadores, sensibilidade ao protocolo e contribuição das derivadas. RF/XGBoost são candidatos principais; demais modelos existentes são baselines exploratórios. Nova ablação implementada em feature_ablation_v4; execução e cobertura verificáveis nos manifestos. Método em feature_ablation_v4.md.
 
 ## Infraestrutura
 

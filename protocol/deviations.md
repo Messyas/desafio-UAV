@@ -40,3 +40,18 @@ Para cada alteração futura, registrar: data, regra anterior, regra nova, motiv
 - MLflow recebe cópias dos jobs existentes por exportador opcional. Não seleciona modelos, não promove versões e não retreina. CSV/JSON são a fonte científica.
 - Os artefatos e resultados já foram examinados. A ablação prevista é exploratória; esta revisão não cria teste intocado. Nenhum novo treinamento foi apresentado como resultado desta limpeza.
 - Ambiente de verificação: Python 3.12.14, com versões científicas de `requirements-research.txt`; o `.venv` antigo referencia Python 3.12.10 em caminho indisponível.
+
+## 26 de setembro de 2026 — implementação do ciclo revisado
+
+- Pedido do pesquisador: implementar minuciosamente a revisão e preparar a base experimental antes de redigir o novo artigo.
+- Regra nova: v4 congela RF/XGBoost com parâmetros da baseline original, A0–A4, cinco folds, seed 20260907 e S0/S1/S2. Não aproveitar parâmetros escolhidos após observar avaliações externas. Todos os braços, incluindo A0, são treinados neste contrato.
+- Pré-processamento: razões calculadas no pipeline, denominador não positivo/overflow→ausente, mediana ajustada no treino, coluna inteiramente ausente no treino preservada com fallback 0. Nenhum epsilon arbitrário. Dados brutos não mudam.
+- Proteções: hashes de dados/splits/configuração/código/ambiente antes do ajuste; partições e rótulos conferidos; corrupção explícita bloqueia retomada. Manifestos informam grade completa e jobs faltantes; análise exige OOF completo dos protocolos solicitados.
+- Incerteza: 2.000 réplicas pareadas por grupos, 95%, RNG 20260926, sobre predições fixas. S1 usa assinatura, S2 origem, S0 sensibilidade por origem. Não tratar folds/seeds como independentes, não alegar intervalo da incerteza completa do treinamento e não escolher vencedor confirmatório.
+- Rodadas próprias: estabilidade v5 repete todos os braços em três seeds S2; sensibilidade v6 isola PacketDropRate recortado, com A0 v4 original como referência. Configuração da sensibilidade não presume defeito do simulador.
+- Informação consultada antes da análise final: configurações históricas, auditoria de dados e documentação de API. A auditoria descritiva confirma quase redundância de loss_ratio/PacketDropRate e 38.501 ausentes em throughput_per_hop. Os braços e o orçamento foram mantidos; não remover retrospectivamente resultados negativos.
+- Risco residual: exposição anterior ao dataset, dependência entre grupos/treinos e semântica de fluxo não estabelecida. Novo código e seeds não criam teste intocado ou evidência embarcada.
+- Rastreabilidade: CSV/JSON e predições verificadas geram figuras e pacote ZIP local. MLflow espelha os registros e condições; não seleciona modelos. Conferência humana da contribuição, literatura, licenças e revista permanece necessária antes da redação/submissão.
+- Correção de contagem documental: 105 baseline + 10 tuning + 30 estabilidade correspondem a 145 jobs preditivos históricos, não 165. Artefatos não foram alterados por essa correção.
+- Execução concluída sem desvio dos orçamentos congelados: v4 150/150, v5 150/150 e v6 10/10. A análise por grupos foi ampliada para contrastes descritivos entre protocolos, matriz normalizada e resumo descritivo entre seeds; isso ocorreu no código de análise, sem alterar os três arquivos de treinamento congelados nem as predições. Hashes das versões de análise estão nos manifestos.
+- Resultado interpretativo: efeitos A1–A4 pequenos e sem ganho geral replicado nos dois modelos; o contraste S0/S1/S2 e erros Blackhole/Wormhole são mais relevantes para a discussão. Intervalos individuais não são usados como confirmação após múltiplas comparações. Leitura crítica e lacunas para a revista em protocol/evidence_review.md.

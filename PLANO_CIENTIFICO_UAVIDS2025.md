@@ -1,6 +1,6 @@
 # Plano revisado do estudo UAVIDS-2025
 
-Versão 2, 26 de setembro de 2026. Substitui o roteiro de produção e a centralidade de Docker. O plano anterior está em archive/planning/. Protocolos e resultados executados permanecem históricos; esta revisão não os transforma em experimentos confirmatórios.
+Versão 3, 26 de setembro de 2026: implementação do ciclo revisado. Substitui o roteiro de produção e a centralidade de Docker. O plano anterior está em archive/planning/. Protocolos e resultados executados permanecem históricos; esta revisão não os transforma em experimentos confirmatórios.
 
 Título provisório: **Efeito do protocolo de avaliação e da engenharia de atributos na detecção de intrusões do UAVIDS-2025**.
 
@@ -58,7 +58,7 @@ Em S2, mostrar assinaturas e destinos ainda compartilhados entre treino/teste. E
 
 ## 5. Próximo ciclo: ablação de atributos
 
-Status: **planejado, ainda não implementado nem executado**.
+Status: **implementado, testado e executado**. Configurações próprias: feature_ablation_v4 (150/150 jobs), feature_ablation_stability_v5 (150/150 jobs S2) e pdr_sensitivity_v6 (10/10 jobs). Cobertura, hashes e análise constam nos manifestos; leitura crítica em protocol/evidence_review.md. Método detalhado em protocol/feature_ablation_v4.md.
 
 Primeiro usar RF/XGBoost com parâmetros do baseline v1 mantidos fixos, cinco folds existentes e semente 20260907. Isso preserva controle já definido; não selecionar agora os parâmetros que venceram testes externos. O ciclo é exploratório.
 
@@ -70,7 +70,7 @@ Primeiro usar RF/XGBoost com parâmetros do baseline v1 mantidos fixos, cinco fo
 | A3 | throughput_per_hop |
 | A4 | As três |
 
-Fórmulas propostas para implementação e verificação:
+Fórmulas implementadas no pipeline:
 
 - loss_ratio = LostPackets / TxPackets.
 - tx_efficiency = RxBytes / TxBytes.
@@ -78,7 +78,7 @@ Fórmulas propostas para implementação e verificação:
 
 Denominador menor ou igual a zero gera ausente na derivada; não usar epsilon arbitrário. Imputação das derivadas é ajustada somente no treino. Testar unidades, casos limite e valores finitos. Calcular derivadas dentro do pipeline para manter o contrato da inferência.
 
-Examinar redundância de loss_ratio com PacketDropRate e relações algébricas já auditadas. Importância de árvore não comprova ganho ou causalidade. Não selecionar atributos pelo teste.
+Auditoria implementada: loss_ratio e PacketDropRate têm correlação quase 1 neste CSV; 122.148 de 122.171 valores são próximos sob tolerância explicitada no manifesto. Isso enfraquece qualquer alegação de novidade da razão. Importância de árvore não comprova ganho ou causalidade. Não selecionar atributos pelo teste.
 
 Primeiro executar cinco condições em S2: 2 modelos × 5 folds × 5 condições = 50 jobs. Depois executar integralmente S0/S1: mais 100 jobs. Reaproveitar A0 histórico somente se configuração, atributos, pré-processamento, splits, implementação e ambiente forem equivalentes e isso estiver registrado. Se a imputação alterar o contrato, executar A0 de novo.
 
@@ -142,15 +142,18 @@ Exposição histórica ao dataset é irreversível. Novos folds são análise ad
 ## 11. Próximos passos
 
 - [ ] Fechar revisão de literatura e delimitar contribuição ainda não respondida.
-- [x] Reconciliar métricas salvas dos 165 jobs (105 baseline, 10 tuning, 30 estabilidade), verificar hashes e reconstruir agregados; testes de cobertura executados. A conferência do texto do manuscrito permanece pendente.
-- [ ] Congelar configuração e orçamento A0–A4.
-- [ ] Implementar/testar derivadas no pipeline, com identificador próprio de experimento.
-- [ ] Executar ablação completa, preservando resultados negativos e avisos.
-- [ ] Implementar/revisar incerteza por grupos.
+- [x] Reconciliar métricas salvas dos 145 jobs preditivos (105 baseline, 10 tuning, 30 estabilidade), verificar hashes e reconstruir agregados; testes de cobertura executados. A conferência do texto do manuscrito permanece pendente.
+- [x] Congelar configuração e orçamento A0–A4; identidade de código, ambiente, dados e splits registrada antes de ajustar.
+- [x] Implementar/testar derivadas no pipeline, com identificador próprio de experimento.
+- [x] Executar ablação completa v4, preservar resultados negativos e avisos; repetir todas as condições em três seeds S2 v5 e isolar a sensibilidade v6.
+- [x] Implementar e testar bootstrap pareado por grupos sobre OOF fixo. Revisão metodológica humana e limites de dependência continuam necessários.
 - [ ] Avaliar necessidade de S3 e metadados externos, sem prometer dados inexistentes.
 - [ ] Selecionar custo local útil; Docker pode ficar no apêndice.
-- [ ] Vincular cada tabela/alegação ao arquivo de origem.
-- [ ] Preparar depósito de artefatos, conferir licenças e reproduzir fluxo completo em ambiente limpo.
+- [x] Vincular tabelas e figuras novas aos hashes de predições/configuração por manifestos. Alegações do manuscrito dependem da redação posterior.
+- [x] Implementar pacote local de reprodução com hashes, sem publicar ou incluir dados brutos.
+- [ ] Conferir licenças e reproduzir fluxo completo em ambiente limpo antes de depósito público.
 - [ ] Reescrever manuscrito e conferir adequação à revista.
 
 Avançar para redação final quando os experimentos sustentarem uma resposta delimitada. F1 alto, infraestrutura e meta arbitrária de 0,95 não substituem contribuição científica.
+
+O plano operacional para resolver as pendências está em [PLANO_FECHAMENTO_ARTIGO.md](PLANO_FECHAMENTO_ARTIGO.md). Ele começa pela verificação da novidade frente à literatura e só propõe nova experimentação após decidir se há cenários independentes ou dados externos semanticamente compatíveis.

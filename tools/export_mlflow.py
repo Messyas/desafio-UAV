@@ -94,6 +94,11 @@ def export_mlflow(
             and (not include_predictions or run.data.tags.get("includes_predictions") == "true")
             for run in matching
         ):
+            for saved_run in matching:
+                if saved_run.info.status == "FINISHED" and all(
+                    saved_run.data.tags.get(key) == value for key, value in identity.items()
+                ):
+                    client.set_tag(saved_run.info.run_id, "experiment_complete", str(manifest["complete"]).lower())
             skipped += 1
             continue
         tags = {
@@ -109,6 +114,10 @@ def export_mlflow(
         try:
             for key in ("protocol", "fold", "model", "seed"):
                 client.log_param(run_id, key, record[key])
+            if "condition" in record:
+                client.log_param(run_id, "condition", record["condition"])
+                client.log_param(run_id, "features", json.dumps(record["features"]))
+                client.log_param(run_id, "clip_packet_drop_rate", record["clip_packet_drop_rate"])
             parameters = record.get(
                 "selected_parameters", config["models"][record["model"]].get("parameters", {})
             )
@@ -123,6 +132,9 @@ def export_mlflow(
                     client.log_metric(run_id, key, value)
             for path in (config_path, result_dir / "experiment_manifest.json", item["path"]):
                 client.log_artifact(run_id, str(path))
+            frozen_path = result_dir / "frozen_protocol.json"
+            if frozen_path.exists():
+                client.log_artifact(run_id, str(frozen_path))
             if include_predictions:
                 client.log_artifact(run_id, str(item["prediction"]), artifact_path="predictions")
             client.set_terminated(run_id, status="FINISHED")

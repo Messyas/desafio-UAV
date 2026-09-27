@@ -32,6 +32,7 @@ from sklearn.metrics import (
 )
 from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from threadpoolctl import threadpool_limits
 
@@ -171,6 +172,15 @@ def build_estimator(
         raise ValueError(f"Unknown model: {model_name}")
 
     steps = []
+    if "feature_engineering" in model_config:
+        try:
+            from .features import DerivedFeatures
+        except ImportError:
+            from features import DerivedFeatures
+        steps.extend([
+            ("features", DerivedFeatures(**model_config["feature_engineering"])),
+            ("imputer", SimpleImputer(strategy="median", keep_empty_features=True)),
+        ])
     if model_config.get("scale", False):
         steps.append(("scaler", StandardScaler()))
     steps.append(("model", estimator))
@@ -281,11 +291,20 @@ def run_job(
     model_name: str,
     seed_override: int | None = None,
     force: bool = False,
+    condition: str | None = None,
 ) -> dict[str, Any]:
     seed = int(config["random_seed"] if seed_override is None else seed_override)
     threads = int(config["threads"])
     model_config = config["models"][model_name]
+    if condition is not None:
+        model_config = {**model_config, "feature_engineering": {
+            "features": config["primary_features"],
+            "derived": config["conditions"][condition],
+            "clip_packet_drop_rate": config.get("clip_packet_drop_rate", False),
+        }}
     job_id = f"{protocol.lower()}__fold_{fold}__{model_name}__seed_{seed}"
+    if condition is not None:
+        job_id += f"__{condition}"
     record_path = output_dir / "job_records" / f"{job_id}.json"
     prediction_path = output_dir / "job_predictions" / f"{job_id}.csv.gz"
 
@@ -356,6 +375,8 @@ def run_job(
         model_name=model_name,
         seed=seed,
     )
+    if condition is not None:
+        predictions["condition"] = condition
     write_gzip_csv(prediction_path, predictions)
 
     record = {
@@ -390,6 +411,11 @@ def run_job(
         "prediction_file": prediction_path.relative_to(output_dir).as_posix(),
         "prediction_sha256": file_hash(prediction_path),
     }
+    if condition is not None:
+        record["condition"] = condition
+        record["features"] = [*features, *config["conditions"][condition]]
+        record["training_imputation_statistics"] = estimator.named_steps["imputer"].statistics_.tolist()
+        record["clip_packet_drop_rate"] = config.get("clip_packet_drop_rate", False)
     write_json(record_path, record)
     print(
         f"DONE {job_id} f1_macro={metrics['f1_macro']:.6f} "

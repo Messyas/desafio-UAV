@@ -25,6 +25,8 @@ from tools.export_mlflow import prepare_export
 
 def rebuild_metrics(project_root: Path, config_path: Path) -> dict:
     config = json.loads(config_path.read_text("utf-8"))
+    if config.get("experiment_kind") == "feature_ablation":
+        raise ValueError("Use paired_analysis.py for ablations: it verifies complete paired OOF coverage")
     output_dir = project_root / "results" / config["experiment_id"]
     original, jobs = prepare_export(output_dir, config_path)
     dataset = project_root / "notebooks" / "data" / "raw" / "UAVIDS-2025.csv"

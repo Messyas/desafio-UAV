@@ -46,3 +46,14 @@ Este arquivo não transfere autoria científica para a ferramenta. Os pesquisado
 - Fontes de API: documentação oficial de tracking do MLflow e documentação de validação cruzada do scikit-learn 1.5. Nenhum código de notebook de terceiro foi copiado.
 - Verificações: testes de integridade e casos sintéticos, checksums dos 105 jobs do baseline e validação das métricas salvas. A ablação ainda não foi implementada/executada.
 - Revisão científica pendente: contribuição frente à literatura, semântica/causalidade dos atributos, método de incerteza, dados externos e veículo de publicação.
+
+## 26 de setembro de 2026 — implementação da ablação revisada
+
+- Ferramenta: OpenAI Codex, a pedido do pesquisador para implementar o ciclo antes da redação de novo artigo.
+- Trabalho: transformação clonável no pipeline; imputação exclusivamente no treino; executor A0–A4 com controles RF/XGBoost fixos; configurações distintas de estabilidade e recorte de PacketDropRate; bootstrap pareado por grupos; análise verificada, gráficos exportáveis, pacote local e tracking opcional com condição registrada.
+- Controles: A0 retreinado no novo contrato, hashes do baseline e do experimento, alinhamento por linha/fold/classe, cobertura OOF, recusa de retomada quando dados, código ou ambiente diferem. Documento Word histórico não foi reescrito e suas instruções não foram tratadas como pedido do pesquisador.
+- Verificações: testes sintéticos de fórmulas, extremos, imputação sem acesso ao teste, grupos desiguais, predições idênticas, vazamento, corrupção, retomada sem ajuste e sensibilidade pareada. Execução real e cobertura estão nos manifestos de results/feature_ablation_v4/; não confundir dados sintéticos com resultados empíricos.
+- Achados descritivos da auditoria: loss_ratio é quase redundante com PacketDropRate; throughput_per_hop fica ausente em 38.501 linhas. Esses fatos enfraquecem interpretações de novidade/semântica automática das razões.
+- Fonte de API: documentação oficial do scikit-learn 1.5 para estimadores e SimpleImputer; nenhuma implementação de artigo externo foi copiada.
+- Limites: intervalos condicionais às predições fixas, sementes não independentes, grupos operacionais sem sessões confiáveis, estudo exploratório, necessidade de revisão humana de literatura/método e reprodução em ambiente limpo. O pacote local não publica nem redistribui o CSV bruto.
+- Resultado desta execução assistida: 150/150 jobs v4, 150/150 v5 e 10/10 v6; 54 testes passaram. Controle A0 v4 apresentou igualdade exata com os 30 jobs históricos correspondentes; 50 jobs da semente compartilhada v4/v5 também produziram predições iguais. Pacotes locais foram verificados por hashes e não foram publicados. Nota interpretativa em protocol/evidence_review.md; o achado geral não justifica anunciar superioridade da engenharia de atributos.

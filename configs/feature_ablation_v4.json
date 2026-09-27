@@ -1,0 +1,101 @@
+{
+  "random_seed": 20260907,
+  "threads": 4,
+  "protocols": [
+    "S0",
+    "S1",
+    "S2"
+  ],
+  "folds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "class_order": [
+    "Normal Traffic",
+    "Blackhole Attack",
+    "Flooding Attack",
+    "Sybil Attack",
+    "Wormhole Attack"
+  ],
+  "primary_features": [
+    "FlowDuration/s",
+    "SrcPort",
+    "DstPort",
+    "TxPackets",
+    "RxPackets",
+    "LostPackets",
+    "TxBytes",
+    "RxBytes",
+    "TxPacketRate/s",
+    "RxPacketRate/s",
+    "TxByteRate/s",
+    "RxByteRate/s",
+    "MeanDelay/s",
+    "MeanJitter/s",
+    "Throughput/Kbps",
+    "MeanPacketSize",
+    "PacketDropRate",
+    "AverageHopCount"
+  ],
+  "experiment_id": "feature_ablation_v4",
+  "experiment_kind": "feature_ablation",
+  "status": "exploratory_paired_ablation_not_confirmatory",
+  "seeds": [
+    20260907
+  ],
+  "conditions": {
+    "A0": [],
+    "A1": [
+      "loss_ratio"
+    ],
+    "A2": [
+      "tx_efficiency"
+    ],
+    "A3": [
+      "throughput_per_hop"
+    ],
+    "A4": [
+      "loss_ratio",
+      "tx_efficiency",
+      "throughput_per_hop"
+    ]
+  },
+  "models": {
+    "random_forest": {
+      "enabled": true,
+      "scale": false,
+      "parameters": {
+        "n_estimators": 200,
+        "max_features": "sqrt",
+        "min_samples_leaf": 1,
+        "class_weight": "balanced_subsample"
+      }
+    },
+    "xgboost": {
+      "enabled": true,
+      "scale": false,
+      "parameters": {
+        "n_estimators": 200,
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "objective": "multi:softprob",
+        "eval_metric": "mlogloss",
+        "tree_method": "hist"
+      }
+    }
+  },
+  "clip_packet_drop_rate": false,
+  "analysis": {
+    "bootstrap_replicates": 2000,
+    "confidence": 0.95,
+    "seed": 20260926,
+    "reference_condition": "A0",
+    "scope": "conditional_on_fixed_oof_predictions_not_training_uncertainty"
+  },
+  "baseline_config_sha256": "c9c4c015bf183f934fb563216eb455696903ed02ce70d68dc543fc14aa04e142"
+}
