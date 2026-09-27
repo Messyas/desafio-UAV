@@ -82,6 +82,8 @@ Gera ZIP local em research_artifacts/releases/, com manifesto SHA-256 e escopo e
 
 Para repetir em outra máquina/ambiente, criar cópia da configuração com novo experiment_id e registrar a reprodução; não tentar anexar treinamentos de ambiente diferente ao manifesto original. O pacote preserva os hashes e o ambiente da execução original. Reproduzir o pipeline completo em clone limpo antes de submissão.
 
+Depois da execução limpa, `tools/compare_reproduction.py <results/original> <results/reproducao>` compara configuração (exceto `experiment_id`), hashes de dados/splits/código/ambiente, cobertura dos jobs, métricas por fold e SHA-256 de cada predição. Hashes de predição divergentes são lidos e comparados campo a campo, com igualdade categórica e tolerância numérica absoluta `1e-12` (configurável); o relatório conserva tanto a divergência binária quanto a maior diferença numérica. O relatório da reprodução deve indicar o novo identificador, a versão do commit e se houve divergência; equivalência em uma cópia do **mesmo CSV** valida a implementação, não generalização a outro cenário.
+
 ## Rodadas preditivas históricas
 
 ```powershell

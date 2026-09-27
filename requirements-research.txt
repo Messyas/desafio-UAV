@@ -1,4 +1,4 @@
-# Tested with Python 3.12.10 on 2026-09-07.
+# Original audit used Python 3.12.10; revised v4-v6 and clean clone use 3.12.14.
 numpy==1.26.4
 pandas==2.2.3
 scikit-learn==1.5.2

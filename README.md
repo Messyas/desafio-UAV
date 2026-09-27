@@ -27,7 +27,8 @@ O CSV vem do [depósito dos autores no Zenodo](https://zenodo.org/records/153369
 - [Leitura crítica dos resultados](protocol/evidence_review.md): achados, limitações e critérios para o novo artigo.
 - [Plano de fechamento do artigo](PLANO_FECHAMENTO_ARTIGO.md): sequência, entregáveis e decisões antes da redação/submissão.
 - [Matriz de literatura](protocol/literature_matrix.csv), [auditoria semântica](protocol/feature_semantics_audit.csv), [validade externa](protocol/external_data_feasibility.md), [inferência](protocol/statistical_review.md) e [triagem de revista](protocol/journal_screen.md): evidências e limites para a tese.
-- [Minuta de manuscrito](MANUSCRIPT_DRAFT.md): texto-base conservador, pendente de reprodução e revisão científica.
+- [Minuta de manuscrito](MANUSCRIPT_DRAFT.md): texto-base conservador, pendente de revisão científica e seleção do periódico.
+- [Reprodução limpa concluída](protocol/reproduction_20260927.md): 310/310 jobs e comparação de 13 tabelas; equivalência numérica com divergências binárias registradas.
 - `src/uavids_study/`: implementação; `configs/`: parâmetros; `protocol/`: métodos e desvios.
 - `notebooks/research/`: análise narrativa; `tests/`: invariantes metodológicas e integridade.
 - `results/`: predições/registros; `reports/`: tabelas/figuras; `research_artifacts/`: auditoria/partições.

@@ -1,6 +1,6 @@
 # Protocol and feature sensitivity in a simulated UAV intrusion benchmark
 
-**Working draft, 27 September 2026.** This is a manuscript base, not a submission-ready article. Every result below refers to the UAVIDS-2025 v1 CSV and the exploratory v4/v5/v6 analyses. It must be checked again after clean reproduction and expert review of the uncertainty analysis. No journal has been selected.
+**Working draft, 27 September 2026.** This is a manuscript base, not a submission-ready article. Every result below refers to the UAVIDS-2025 v1 CSV and the exploratory v4/v5/v6 analyses. Clean reproduction completed all 310 jobs and verified 13 analysis tables; expert review of the uncertainty analysis and scientific contribution remains pending. No journal has been selected. The International Journal of Information Security is a historically A2 candidate for the author's field, but the present single-benchmark evidence may not meet its originality threshold; see `protocol/journal_screen.md`.
 
 ## Abstract
 

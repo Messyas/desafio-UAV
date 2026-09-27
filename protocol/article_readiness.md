@@ -4,7 +4,7 @@ A implementação prepara o estudo; não assegura novidade, aceitação ou class
 
 | Item | Evidência verificável | Critério de uso |
 |---|---|---|
-| Dados e proveniência | provenance/data_source.json; data_manifest.json | Fonte, licença e checksum canônico conferidos |
+| Dados e proveniência | provenance/data_source.json; data_manifest.json | Fonte e checksum canônicos conferidos; API do registro informa CC BY 4.0 para o CSV |
 | População avaliada | split_candidates.csv.gz; diagnósticos de grupos/sobreposição | Explicitar S0/S1/S2 e o que cada um não controla |
 | Atributos derivados | derived_features/feature_diagnostics.csv e missing_by_class.csv | Explicar redundância, unidades, ausência e imputação |
 | Ablação principal | results/feature_ablation_v4/experiment_manifest.json | 150 jobs para discutir o painel S0/S1/S2 integral |
@@ -32,4 +32,4 @@ Um estágio S2 completo pode ser relatado como tal, mas não responde sozinho à
 
 ## Pendências humanas
 
-Fechar revisão de literatura e contribuição ainda não respondida; revisar definições dos atributos com os autores/dicionário; identificar novos cenários ou metadados confiáveis quando viáveis; conferir licenças de dados/códigos/referências; definir a revista e suas exigências; revisar método de incerteza e adequação das unidades; executar reprodução limpa. Não preencher essas lacunas com números, cenários ou resultados supostos.
+Revisar contribuição e adequação ao periódico com pesquisadores da área; obter definições operacionais faltantes com os autores ou código de extração se surgir; identificar novos cenários ou metadados confiáveis quando viáveis; decidir licença do código próprio e conferir direitos dos demais materiais; selecionar a revista e suas exigências; revisar método de incerteza e adequação das unidades; finalizar reprodução limpa. A licença CC BY 4.0 do CSV canônico foi confirmada na API específica do Zenodo. Não preencher lacunas restantes com números, cenários ou resultados supostos.
