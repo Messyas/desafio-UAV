@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import pickle
 import platform
@@ -123,8 +124,11 @@ def freeze_models(project_root: Path, config_path: Path, force: bool = False) ->
 
 def main() -> None:
     project_root = Path(__file__).resolve().parents[2]
-    config_path = project_root / "configs" / "deployment_candidates_v1.json"
-    freeze_models(project_root, config_path)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--config", type=Path,
+                        default=project_root / "configs" / "deployment_candidates_v1.json")
+    args = parser.parse_args()
+    freeze_models(project_root, args.config.resolve())
 
 
 if __name__ == "__main__":

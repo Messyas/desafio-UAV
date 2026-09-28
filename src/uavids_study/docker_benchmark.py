@@ -38,6 +38,8 @@ def docker_command(*args: str, timeout: float | None = None) -> str:
         check=True,
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         timeout=timeout,
     )
     return completed.stdout.strip()
@@ -61,6 +63,14 @@ def encode_instances(instances: np.ndarray) -> bytes:
     return json.dumps(
         {"instances": instances.tolist()}, separators=(",", ":"), allow_nan=False
     ).encode("utf-8")
+
+
+def workload_seed(config: dict[str, Any], model_name: str) -> int:
+    """Preserve historical sampling; paired workloads share one seed."""
+    seed = int(config["random_seed"])
+    if not config.get("paired_inputs", False):
+        seed += config["models"].index(model_name) * 10_000
+    return seed
 
 
 class PersistentClient:
@@ -380,6 +390,8 @@ def run_model(
     host = "127.0.0.1"
     port = int(config["host_port"])
     docker_command("rm", "-f", container_name, timeout=30) if container_exists(container_name) else None
+    memory_args = (["--memory-swap", str(config["memory_limit"])]
+                   if config.get("disable_swap", False) else [])
     docker_command(
         "run",
         "--detach",
@@ -389,6 +401,7 @@ def run_model(
         str(config["cpu_limit"]),
         "--memory",
         str(config["memory_limit"]),
+        *memory_args,
         "--pids-limit",
         "256",
         "--read-only",
@@ -400,6 +413,14 @@ def run_model(
         f"MODEL_NAME={model_name}",
         "--env",
         f"OMP_NUM_THREADS={config['model_threads']}",
+        "--env",
+        f"MODEL_THREADS={config['model_threads']}",
+        "--env",
+        f"OPENBLAS_NUM_THREADS={config['model_threads']}",
+        "--env",
+        f"MKL_NUM_THREADS={config['model_threads']}",
+        "--env",
+        f"NUMEXPR_NUM_THREADS={config['model_threads']}",
         "--publish",
         f"127.0.0.1:{port}:{config['container_port']}",
         config["image_tag"],
@@ -414,9 +435,7 @@ def run_model(
             float(config["startup_timeout_seconds"]),
         )
         inspect = inspect_container(container_name)
-        rng = np.random.default_rng(
-            int(config["random_seed"]) + config["models"].index(model_name) * 10_000
-        )
+        rng = np.random.default_rng(workload_seed(config, model_name))
         sampler = DockerStatsSampler(
             container_name, float(config["resource_sample_interval_seconds"])
         )
@@ -447,6 +466,8 @@ def run_model(
 
         summary = {
             "benchmark_id": config["benchmark_id"],
+            "config_sha256": json_hash(config),
+            "workload_seed": workload_seed(config, model_name),
             "model": model_name,
             "model_sha256": metadata["model_sha256"],
             "model_bytes": metadata["model_bytes"],
@@ -507,16 +528,26 @@ def run_model(
             },
         }
         write_json(benchmark_dir / f"{model_name}__summary.json", summary)
+        if config.get("continue_on_model_failure", False):
+            for suffix in ("failure", "container_failure"):
+                (benchmark_dir / f"{model_name}__{suffix}.json").unlink(missing_ok=True)
         print(
             f"DOCKER {model_name}: p50={summary['individual_client']['p50_us']:.2f}us "
             f"p99={summary['individual_client']['p99_us']:.2f}us "
             f"memory_max={summary['resources']['memory_mib_max']:.1f}MiB"
         )
         return summary
-    except Exception:
-        logs = docker_command("logs", container_name, timeout=30)
-        if logs:
-            print(logs)
+    except Exception as exc:
+        diagnostics = {"error_type": type(exc).__name__, "message": str(exc)}
+        for key, operation in (
+            ("container_inspect", lambda: inspect_container(container_name)),
+            ("container_logs", lambda: docker_command("logs", container_name, timeout=30)),
+        ):
+            try:
+                diagnostics[key] = operation()
+            except Exception as diagnostic_error:
+                diagnostics[key] = str(diagnostic_error)
+        write_json(benchmark_dir / f"{model_name}__container_failure.json", diagnostics)
         raise
     finally:
         if sampler is not None:
@@ -579,7 +610,7 @@ def build_report(
 
     quality_cost_rows = []
     stability_path = project_root / "results" / "stability_s2_v3" / "metrics_summary.csv"
-    if stability_path.exists():
+    if stability_path.exists() and config.get("include_legacy_quality", True):
         stability = pd.read_csv(stability_path)
         for summary in summaries:
             selected = stability.loc[
@@ -697,10 +728,20 @@ def main() -> None:
         default=project_root / "configs" / "docker_local_v2.json",
     )
     parser.add_argument("--skip-build", action="store_true")
-    parser.add_argument("--model", choices=["xgboost", "random_forest"])
+    parser.add_argument("--model", help="Model present in the selected configuration")
     args = parser.parse_args()
     config_path = args.config.resolve()
     config = json.loads(config_path.read_text(encoding="utf-8"))
+    if args.model and args.model not in config["models"]:
+        parser.error(f"Model absent from configuration: {args.model}")
+    if config.get("paired_inputs", False):
+        frozen_path = project_root / "benchmarks" / config["benchmark_id"] / "frozen_config.json"
+        if frozen_path.exists():
+            frozen = json.loads(frozen_path.read_text(encoding="utf-8"))
+            if frozen != config:
+                raise RuntimeError("Benchmark configuration changed: use a new benchmark ID")
+        else:
+            write_json(frozen_path, config)
     artifact_dir = (
         project_root / "artifacts" / "models" / config["artifact_set_id"]
     )
@@ -720,12 +761,16 @@ def main() -> None:
     ].to_numpy(dtype=np.float64)
     if not args.skip_build:
         print(f"Building {config['image_tag']}...")
+        build_args = []
+        if config.get("dockerfile"):
+            build_args = ["--build-arg", f"ARTIFACT_SET_ID={config['artifact_set_id']}"]
         docker_command(
             "build",
+            *build_args,
             "--tag",
             config["image_tag"],
             "--file",
-            str(project_root / "Dockerfile"),
+            str(project_root / config.get("dockerfile", "Dockerfile")),
             str(project_root),
             timeout=1800,
         )
@@ -733,8 +778,22 @@ def main() -> None:
         docker_command("image", "inspect", config["image_tag"])
     )[0]
     models = [args.model] if args.model else config["models"]
-    summaries = [run_model(project_root, config, inputs, model) for model in models]
-    if not args.model:
+    summaries = []
+    failures = []
+    for model in models:
+        try:
+            summaries.append(run_model(project_root, config, inputs, model))
+        except Exception as exc:
+            if not config.get("continue_on_model_failure", False):
+                raise
+            failure = {"model": model, "error_type": type(exc).__name__,
+                       "message": str(exc), "config_sha256": json_hash(config),
+                       "time_utc": datetime.now(timezone.utc).isoformat()}
+            failures.append(failure)
+            write_json(project_root / "benchmarks" / config["benchmark_id"]
+                       / f"{model}__failure.json", failure)
+            print(f"FAILED {model}: {exc}")
+    if not args.model and summaries:
         build_report(project_root, config, summaries)
     benchmark_dir = project_root / "benchmarks" / config["benchmark_id"]
     manifest = {
@@ -743,10 +802,13 @@ def main() -> None:
         "completed_at_utc": datetime.now(timezone.utc).isoformat(),
         "config_sha256": json_hash(config),
         "dataset_sha256": artifact_manifest["dataset_sha256"],
+        "benchmark_code_sha256": file_hash(Path(__file__).resolve()),
+        "service_code_sha256": file_hash(project_root / "src/uavids_study/docker_inference_service.py"),
         "artifact_set_id": config["artifact_set_id"],
         "image_id": image_inspect["Id"],
         "image_repo_digests": image_inspect.get("RepoDigests", []),
         "models": [summary["model"] for summary in summaries],
+        "failures": failures,
         "host": {
             "platform": platform.platform(),
             "processor": platform.processor(),

@@ -6,11 +6,20 @@ from src.uavids_study.docker_benchmark import (
     encode_instances,
     parse_bytes,
     percentile_summary_ns,
+    workload_seed,
 )
 from src.uavids_study.docker_inference_service import InferenceState
 
 
 class DockerBenchmarkUtilitiesTest(unittest.TestCase):
+    def test_paired_workload_does_not_depend_on_model_order(self) -> None:
+        config = {"random_seed": 17, "paired_inputs": True,
+                  "models": ["xgboost", "logistic_regression", "mlp_compact"]}
+        for name in config["models"]:
+            self.assertEqual(workload_seed(config, name), 17)
+        config.pop("paired_inputs")
+        self.assertEqual(workload_seed(config, "logistic_regression"), 10017)
+
     def test_parse_binary_memory_units(self) -> None:
         self.assertEqual(parse_bytes("512MiB"), 512 * 1024**2)
         self.assertEqual(parse_bytes("1.5 GiB"), 1.5 * 1024**3)

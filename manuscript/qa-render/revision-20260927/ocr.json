@@ -1,0 +1,2212 @@
+﻿[
+    {
+        "page":  1,
+        "lines":  [
+                      {
+                          "text":  "Sensibilidade aos protocolos de avaliaqäo e engenharia de",
+                          "y":  0
+                      },
+                      {
+                          "text":  "atributos na classificaqäo de intrusöes em UAVIDS-2025",
+                          "y":  0
+                      },
+                      {
+                          "text":  "Versäo para revisäo dos autores — 27 de setembro de 2026",
+                          "y":  0
+                      },
+                      {
+                          "text":  "Autores, afiliaqöes, ORCID e autor correspondente: preencher antes da submissäo.",
+                          "y":  0
+                      },
+                      {
+                          "text":  "Resumo",
+                          "y":  272
+                      },
+                      {
+                          "text":  "Estimativas de desernpenho em benchmarks de detecqäo de intrusöes dependern da populaqäo de teste e",
+                          "y":  272
+                      },
+                      {
+                          "text":  "das transformaqöes aplicadas aos atributos. Este estudo avalia essas escolhas no UAVIDS-2025, um",
+                          "y":  272
+                      },
+                      {
+                          "text":  "conjunto simulado com 122.171 fluxos e Cinco classes. Comparamos Random Forest e XGBoost em trés",
+                          "y":  272
+                      },
+                      {
+                          "text":  "protocolos de validaqäo cruzada: divisäo aleat6ria estratificada, separaqäo de assinaturas numéricas",
+                          "y":  272
+                      },
+                      {
+                          "text":  "idénticas e separaqäo por endereqo de origem. Identificadores de fluxo e endereqos foram excluidos dos",
+                          "y":  272
+                      },
+                      {
+                          "text":  "preditores. Uma ablaqäo pareada avaliou trés razöes derivadas, isoladamente e em conjunto, com",
+                          "y":  272
+                      },
+                      {
+                          "text":  "paråmetros fixos e imputaqäo ajustada apenas no treinamento. Na condiqäo corn 18 atributos originais, o",
+                          "y":  272
+                      },
+                      {
+                          "text":  "Fl-macro do XGBoost foi 0,956326 na divisäo aleatåria e 0,952666 na separaqäo por origem. Nesta",
+                          "y":  272
+                      },
+                      {
+                          "text":  "ültima, os Oito intervalos condicionais das diferenqas entre as condiqöes derivadas e o controle incluiram",
+                          "y":  272
+                      },
+                      {
+                          "text":  "zero. A razäo de perda foi quase redundante com a taxa de descarte fornecida, e a vazäo por Salto ficou",
+                          "y":  272
+                      },
+                      {
+                          "text":  "indefinida em 38.501 registros. Uma repetiqäo com tres sementes e uma anålise de sensibilidade ao",
+                          "y":  272
+                      },
+                      {
+                          "text":  "recorte da taxa de descarte näo sustentaram ganho geral das transformaqöes. No benchmark Docker com",
+                          "y":  272
+                      },
+                      {
+                          "text":  "CPU e 512 MiB, XGBoost teve mediana HTTP de 1,107 ms; entre os quatro modelos medidos, as",
+                          "y":  272
+                      },
+                      {
+                          "text":  "medianas variaram de 0,912 a 5,856 ms. As conclusöes se restringern å classificaqäo de vetores de fluxo e",
+                          "y":  272
+                      },
+                      {
+                          "text":  "ao custo local observado neste benchmark.",
+                          "y":  272
+                      },
+                      {
+                          "text":  "Palavras-chave: UAV; detecqäo de intrusöes; avaliaqäo por grupos; ablaqäo de atributos;",
+                          "y":  272
+                      },
+                      {
+                          "text":  "reprodutibilidade.",
+                          "y":  727
+                      },
+                      {
+                          "text":  "Abstract",
+                          "y":  794
+                      },
+                      {
+                          "text":  "Performance estimates in intrusion-detection benchmarks depend on the test population and feature",
+                          "y":  794
+                      },
+                      {
+                          "text":  "transformations. We evaluated these choices in UAVIDS-2025, a simulated dataset containing 122,171",
+                          "y":  794
+                      },
+                      {
+                          "text":  "flows and five classes. Random Forest and XGBoost were compared under stratified random folds,",
+                          "y":  794
+                      },
+                      {
+                          "text":  "disjoint exact numeric signatures, and disjoint source addresses. Flow identifiers and addresses were",
+                          "y":  794
+                      },
+                      {
+                          "text":  "excluded from the predictors. A paired ablation assessed three derived ratios, individually and jointly,",
+                          "y":  794
+                      },
+                      {
+                          "text":  "with fixed parameters and training-only imputation. With the 18 original features, XGBoost macro Fl",
+                          "y":  794
+                      },
+                      {
+                          "text":  "was 0.956326 under random splitting and 0.952666 under source-disjoint evaluation. In the latter",
+                          "y":  794
+                      },
+                      {
+                          "text":  "protocol, all eight conditional intervals for feature-condition differences from the baseline included zero.",
+                          "y":  794
+                      },
+                      {
+                          "text":  "The loss ratio was nearly redundant with the supplied packet-drop rate, and throughput per hop was",
+                          "y":  794
+                      },
+                      {
+                          "text":  "undefined in 38,501 records. A three-seed repetition and packet-drop-rate clipping sensitivity did not",
+                          "y":  794
+                      },
+                      {
+                          "text":  "Påginal",
+                          "y":  1123
+                      }
+                  ]
+    },
+    {
+        "page":  2,
+        "lines":  [
+                      {
+                          "text":  "support a general improvement. In a Docker benchmark limited to 0.5 CPU and 512 MiB, XGBoost",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "achieved a I. 107 ms median HTTP latency; across the four measured models, medians ranged from 0.912",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "to 5.856 ms. The findings are restricted to flow-vector classification and local inference cost in this",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "benchmark.",
+                          "y":  187
+                      },
+                      {
+                          "text":  "Keywords: U AV; intrusion detection; grouped evaluation; feature ablation; reproducibility.",
+                          "y":  187
+                      },
+                      {
+                          "text":  "1. Introduqäo",
+                          "y":  187
+                      },
+                      {
+                          "text":  "Conjuntos püblicos de dados permitem comparar classificadores de intrusöes, mas a interpretaqäo de suas",
+                          "y":  187
+                      },
+                      {
+                          "text":  "métricas exige descrever o que o conjunto de teste representa. Fluxos diferentes podem compartilhar",
+                          "y":  187
+                      },
+                      {
+                          "text":  "endereqos, condiqöes de geraqäo e vetores de atributos idénticos. Uma divisäo aleatoria avalia a",
+                          "y":  187
+                      },
+                      {
+                          "text":  "classificaqäo de registros retirados da mesma coleqäo; ela näo estabelece, por si sö, desempenho diante de",
+                          "y":  187
+                      },
+                      {
+                          "text":  "uma nova campanha de simulaqäo OLI de uma rede operacional.",
+                          "y":  187
+                      },
+                      {
+                          "text":  "O UAVIDS-2025 disponibiliza registros de tråfego normal e de quatro ataques em redes de veiculos",
+                          "y":  187
+                      },
+                      {
+                          "text":  "aéreos näo tripulados (UAVs) [1,21. Seu benchmark original e trabalhos subsequentes jå estudaram",
+                          "y":  187
+                      },
+                      {
+                          "text":  "classificadores de årvores, ensembles, redes neurais e interpretaqäo de erros [1,31. Portanto, obter Fl",
+                          "y":  187
+                      },
+                      {
+                          "text":  "elevado corn Random Forest ou XGBoost näo constitui contribuiqäo suficiente. Tambérn näo é inédita a",
+                          "y":  187
+                      },
+                      {
+                          "text":  "preocupaqäo com identificadores e separaqäo por origem: ela foi explorada em uma tarefa de detecqäo de",
+                          "y":  187
+                      },
+                      {
+                          "text":  "Sybil desconhecido, com representaqäo de taxas por origem [4].",
+                          "y":  187
+                      },
+                      {
+                          "text":  "Este trabalho aborda duas perguntas delimitadas. Primeiro, quanto o desernpenho da classificaqäo fechada",
+                          "y":  187
+                      },
+                      {
+                          "text":  "de Cinco classes muda entre divisöes aleatörias, divisöes que impedem assinaturas numéricas identicas",
+                          "y":  187
+                      },
+                      {
+                          "text":  "nos dois lados e divisöes por origem? Segundo, tres razöes de contadores de fluxo acrescentam ganho",
+                          "y":  187
+                      },
+                      {
+                          "text":  "consistente aos mesmos modelos e partiqöes? O interesse estå na comparaqäo controlada, incluindo",
+                          "y":  187
+                      },
+                      {
+                          "text":  "resultados negativos, e na interpretaqäo das limitaqöes dos atributos disponiveis.",
+                          "y":  187
+                      },
+                      {
+                          "text":  "As contribuiqöes säo: uma auditoria dos registros e das transformaqöes propostas; uma avaliaqäo pareada",
+                          "y":  187
+                      },
+                      {
+                          "text":  "com modelos, parärnetros e partiqöes congelados; e uma anålise dos limites de inferencia acompanhada",
+                          "y":  187
+                      },
+                      {
+                          "text":  "de configuraqöes, prediqöes e verificaqöes de reproduqäo. Näo propomos uma nova arquitetura, nem",
+                          "y":  187
+                      },
+                      {
+                          "text":  "apresentamos a separaqäo por origern corno novidade isolada. Como os dados e resultados anteriores jå",
+                          "y":  187
+                      },
+                      {
+                          "text":  "haviam Sido examinados, as anålises säo exploratörias.",
+                          "y":  187
+                      },
+                      {
+                          "text":  "2. Trabalhos relacionados",
+                          "y":  187
+                      },
+                      {
+                          "text":  "Zeng, Bashir e Nait-Abdesselam apresentam o UAVIDS-2025 e um benchmark com divisäo estratificada",
+                          "y":  187
+                      },
+                      {
+                          "text":  "de treinamento e teste [II O registro püblico descreve simulaqäo com NS-3.24, mobilidade BOID, IEEE",
+                          "y":  187
+                      },
+                      {
+                          "text":  "802.1 lac, roteamento AODV e propagaqäo Nakagami A disponibilizaqäo do CSV favorece estudos",
+                          "y":  187
+                      },
+                      {
+                          "text":  "Pågina2",
+                          "y":  1123
+                      }
+                  ]
+    },
+    {
+        "page":  3,
+        "lines":  [
+                      {
+                          "text":  "posteriores; entretanto, o arquivo utilizado aqui näo contém identificadores de execuqöes nem c6digo de",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "coleta que permita reconstruir cenårios independentes.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Zarkadis e Douligeris avaliam ensembles e modelos neurais, seleqäo de atributos e explicaqöes SHAP no",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "mesmo dataset [31. Jå discutem confusöes entre Blackhole e Wormhole. Nossa anålise por classe näo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "reivindica descobrir esse problema. O foco complementar é comparar tres populaqöes de teste e verificar",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "transformaqöes de atributos sob um controle comum. A divisäo e o pré-processamento daquele trabalho",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "diferem dos empregados aqui, inviabilizando uma ordenaqäo direta dos respectivos valores de Fl.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Demir e Gumus estudam detecqäo de Sybil desconhecido com separaqäo por origem e exclusäo de",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "valores brutos de identificadores [41. Sua tarefa deixa uma classe de ataque fora do ajuste e utiliza",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "medidas de detecqäo de novidade. Aqui todas as Cinco classes estäo presentes no treinamento e no teste.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Assim, diferenqas de métricas näo indicam superioridade entre os trabalhos; o estudo anterior também",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "impede tratar o simples uso de origens disjuntas como contribuiqäo inédita.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Islam et al. avaliam ensembles explicåveis em conjuntos de drones e de redes industriais [51. Na tarefa",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "descrita para UAVIDS-2025, as classes säo mapeadas para Normal, Blackhole e Wormhole. Esse",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "mapeamento difere das Cinco classes presewadas neste artigo. A literatura selecionada contextualiza a",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "pergunta e suas limitaqöes; näo constitui uma revisäo sistemåtica, nem permite afirmar que o presente",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "protocolo supera todos os trabalhos anteriores.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "3. Dados e métodos",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "3.1. Fonte, tarefa e auditoria",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Utilizamos o conjunto de dados UAVIDS-2025 disponibilizado no Zenodo (DOI",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "10.5281/zenodo.15336998), sob licenqa CC BY 4.0 [21. O arquivo contém 122.171 registros e 23 colunas.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "A tarefa supervisionada atribui a cada vetor uma das Cinco classes originais, sem introduzir ataques",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "desconhecidos ou alterar os rötulos. A Tabela I apresenta os suportes de classe, preservados na agregaqäo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "das predicöes fora da amostra.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Tabela I. Composiqäo do dataset e suporte das classes.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Classe",
+                          "y":  882
+                      },
+                      {
+                          "text":  "Normal Traffic",
+                          "y":  882
+                      },
+                      {
+                          "text":  "Blackhole Attack",
+                          "y":  882
+                      },
+                      {
+                          "text":  "Flooding Attack",
+                          "y":  882
+                      },
+                      {
+                          "text":  "Sybil Attack",
+                          "y":  882
+                      },
+                      {
+                          "text":  "Wormhole Attack",
+                          "y":  882
+                      },
+                      {
+                          "text":  "Fonte: anålises do estudo com UAVIDS-2025 [2].",
+                          "y":  882
+                      },
+                      {
+                          "text":  "Flu xos",
+                          "y":  882
+                      },
+                      {
+                          "text":  "26.172",
+                          "y":  912
+                      },
+                      {
+                          "text":  "26.110",
+                          "y":  942
+                      },
+                      {
+                          "text":  "19.726",
+                          "y":  972
+                      },
+                      {
+                          "text":  "24.077",
+                          "y":  1002
+                      },
+                      {
+                          "text":  "26.086",
+                          "y":  1032
+                      },
+                      {
+                          "text":  "Pågina3",
+                          "y":  1123
+                      }
+                  ]
+    },
+    {
+        "page":  4,
+        "lines":  [
+                      {
+                          "text":  "O painel principal contém 18 atributos: FlowDuration/s, SrcPort, DstPort, TxPackets, RxPackets,",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "LostPackets, TxBytes, RxBytes, TxPacketRate/s, RxPacketRate/s, TxByteRate/s, RxByteRate/s,",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "MeanDelay/s, MeanJitter/s, Throughputkbps, MeanPacketSize, PacketDropRate e AverageHopCount.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "FlowlD, SrcAddr, DstAddr e Protocol säo excluidos dos preditores. Protocol é constante no CSV. Portas",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "permanecem no painel e podem refletir particularidades da simulaqäo; a exclusäo dos quatro campos näo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "elimina todos os artefatos possiveis.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "A auditoria encontrou 113.952 assinaturas numéricas distintas nos 18 atributos. Existem 8.219 registros",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "repetidos apös a primeira ocorréncia, e 10.774 linhas pertencem a assinaturas repetidas, sem conflito de",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "rotulos dentro de uma assinatura. FlowlD é ünico e sequencial, e aproximadamente 93,00/0 dos pares de",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "linhas adjacentes tern o mesmo rotulo. Isso evidencia organizaqäo do arquivo, mas näo fornece uma",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "cronologia vålida. Näo tratamos blocos de linhas como execuqöes ou periodos independentes.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Hå 176 endereqos de origem e 218 de destino distintos. O arquivo näo oferece correspondéncia",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "verificåvel entre esses valores e aeronaves fisicas. As formulas exatas do coletor, a janela de observaqäo e",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "o instante de disponibilidade de cada atributo näo foram reconstruidos. Por isso, descrevemos a tarefa",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "como classificaqäo de vetores de fluxo disponiveis no CSV.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "3.2. Protocolos de avaliaqäo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Comparamos trés protocolos de validaqäo cruzada, todos corn Cinco particöes, ajuste em quatro e",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "avaliaqäo na partiqäo restante. No protocolo de divisäo aleatöria estratificada, os fluxos säo distribuidos",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "aleatoriamente, presewando a proporqäo das classes. No protocolo com separaqäo por assinatura",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "numérica, registros com vetores idénticos dos 18 atributos originais permanecem no mesmo grupo. NO",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "protocolo com separaqäo por endereqo de origem, todos 0s fluxos de uma mesma origem permanecem no",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "mesmo grupo. A estratificaqäo busca preservar a distribuiqäo das classes nos grupos; todas as particöes",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "foram verificadas quanto å cobertura das Cinco classes. O procedimento de reamostragem foi fixado antes",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "da avaliaqäo e sua semente estå registrada nos materiais de reproduqäo.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "A divisäo estratificada aleat6ria estima o desempenho em registros da mesma coleqäo, permitindo que",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "origens e assinaturas apareqam no treino e na avaliaqäo. A separaqäo por assinatura impede a repetiqäo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "exata do painel numérico, mas näo identifica sessöes de simulaqäo. A separaqäo por origem avalia",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "endereqos retidos dentro do mesmo CSV; destinos e algumas assinaturas ainda podem coincidir entre",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "treino e avaliaqäo. Portanto, ela näo equivale a uma nova topologia, execuqäo do simulador ou frota de",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "UAVs.",
+                          "y":  915
+                      },
+                      {
+                          "text":  "As mesmas partiqöes säo usadas em todas as condiqöes de atributos e nos dois modelos. Os indices das",
+                          "y":  915
+                      },
+                      {
+                          "text":  "partiqöes foram congelados e seus arquivos de integridade säo mantidos nos materiais de reproduqäo. Näo",
+                          "y":  915
+                      },
+                      {
+                          "text":  "houve seleqäo de particöes favoråveis ou ordenaqäo temporal inferida a partir do identificador do fluxo.",
+                          "y":  915
+                      },
+                      {
+                          "text":  "Pågina4",
+                          "y":  1123
+                      }
+                  ]
+    },
+    {
+        "page":  5,
+        "lines":  [
+                      {
+                          "text":  "3.3. Condicöes de atributos e pré-processamento",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "O tratamento de referéncia utiliza os 18 atributos numéricos originais. Avaliamos trés razöes derivadas:",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "pacotes perdidos por pacote transmitido (LostPacketsiTxPackets); bytes recebidos por bytes transmitidos",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "(RxBytesfTxBytes); e vazäo por Salto ((Throughput/Kbps)/AverageHopCount). Cada razäo foi",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "acrescentada individualmente ao painel original; avaliamos tarnbém um tratamento que acrescenta as tres",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "razöes em conjunto. As duas primeiras razöes säo adimensionais; a terceira é expressa em Kbps por Salto.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "A razäo entre bytes recebidos e transmitidos näo representa eficiéncia energética.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Denominadores menores ou iguais a zero e resultados näo finitos das razöes geram valores ausentes; näo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "acrescentamos uma constante ao denominador. A imputaqäo pela mediana é ajustada exclusivamente nos",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "dados de treinamento de cada partiqäo e aplicada å avaliaqäo. Uma variåvel derivada inteiramente ausente",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "no treinamento é preservada e preenchida corn zero. O tratamento de referéncia recebe o mesmo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "procedimento de imputaqäo. Näo hå normalizaqäo, seleqäo de atributos ou ajuste estatistico usando os",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "dados de avaliaqäo. As razöes näo säo recortadas na anålise principal.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "3.4. Modelos e orqamento experimental",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Random Forest [6] utiliza 200 årvores, seleqäo da raiz quadrada do nümero de variåveis em cada divisäo,",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "tamanho minimo de folha igual a um e ponderaqäo balanceada das classes. XGBoost [71 utiliza 200",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "estimadores, profundidade måxima 6, taxa de aprendizado 0, l, amostragem de linhas e colunas de 0,8,",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "objetivo multiclasse probabilistico, perda logaritmica e construqäo histogråfica das årvores. Os ajustes",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "usam quatro nucleos de processamento, Python 3.12.14, scikit-learn 1.5.2 [81 e XGBoost 2.0.3. Os",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "paråmetros completos e versöes estäo registrados nos materiais de reproduqäo. Näo realizamos busca de",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "hiperparåmetros ou seleqäo por desernpenho de teste neste estudo.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "A anålise principal combina trés protocolos, dois modelos, quatro tratamentos com razöes derivadas e o",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "tratamento de referéncia, em Cinco particöes, totalizando 150 ajustes. A estabilidade foi examinada",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "repetindo a separaqäo por endereqo de origem para os dois modelos, os Cinco tratamentos e as Cinco",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "partiqöes, com trés inicializaqöes independentes (150 ajustes adicionais). A anålise de sensibilidade",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "acrescentou dez ajustes para avaliar o efeito do recorte da taxa de descarte de pacotes ao intervalo [0, I ] na",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "separaqäo por origem, mantendo os atributos originais. Essa intervenqäo é secundåria e näo pressupöe",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "erro no simulador.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "3.5. Métricas e incerteza",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "A medida principal é Fl-macro calculado apås concatenar as prediqöes fora da amostra de todos os folds.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Para cada uma das Cinco classes, Fl é a média harmonica entre precisäo e revocaqäo; o Fl-macro é a",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "média näo ponderada desses Cinco valores. Métricas indefinidas recebem zero. Tambérn calculamos",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "precisäo, revocaqäo e Fl por classe, confusäo absoluta, proporqäo de tråfego normal classificado como",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Pågina5",
+                          "y":  1123
+                      }
+                  ]
+    },
+    {
+        "page":  6,
+        "lines":  [
+                      {
+                          "text":  "ataque e proporqäo de ataques classificados como normal. Essas duas ültimas taxas näo contabilizam",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "confusöes entre tipos de ataque como falsos alarmes ou ataques perdidos.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Comparamos cada tratamento com razöes derivadas ao tratamento de referéncia por diferenqas pareadas",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "A incerteza foi estimada com 2.000 réplicas de bootstrap de grupos e intervalos percentis de 950/0; a",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "semente de reamostragem foi fixada e registrada nos materiais de reproduqäo. Em cada réplica, grupos",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "säo sorteados com reposiqäo; todos os seus fluxos permanecem juntos, e o mesmo sorteio é usado nos",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "dois tratamentos. A unidade de reamostragem é o endereqo de origem na divisäo aleatöria e na separaqäo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "por origem, e a assinatura numérica exata na separaqäo por assinatura. Grupos tem igual probabilidade de",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "sorteio, mas a métrica conserva a contribuiqäo de todos os fluxos dos grupos sorteados.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Os intervalos condicionam-se is prediqöes fixas jå obtidas. Näo incorporam a incerteza de novo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "treinamento ou novas simulacöes; a dependéncia entre modelos treinados corn folds sobrepostos",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "permanece. Na separaqäo por assinatura, assinaturas distintas podem pertencer å mesma origem ou",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "execuqäo. Näo tratamos folds ou sementes como amostras de populaqöes independentes. Näo hå ajuste de",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "multiplicidade, teste confirmatörio ou margem de equivalencia predefinida. Um intervalo que inclui zero",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "näo demonstra equivalencia ou auséncia definitiva de efeito.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "3.6. Rastreabilidade e reproduqäo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "A identidade do conjunto de dados é estabelecida pela referéncia å versäo depositada no Zenodo [2].",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Configuraqöes, partiqöes, ambiente, cédigo e prediqöes säo vinculados por manifestos de reproduqäo. A",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "comparaqäo dos tratamentos de referencia corn as execuqöes correspondentes verificou as 30",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "combinaqöes de modelo, protocolo e partiqäo, sem misturar ajustes historicos com paråmetros diferentes.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Em uma execuqäo independente a partir de uma cépia limpa do projeto, o conjunto de dados foi",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "novamente obtido da fonte canonica e os 310 ajustes foram executados. As 13 tabelas de anålise",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "coincidiram sob toleräncia absoluta de 10-12, sem mudanqa nas métricas Fl. As categorias preditas",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "coincidiram; a diferenqa måxima entre probabilidades foi 4,44 x 10-16. Essa verificaqäo confirma a",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "reproduqäo local do protocolo, mas näo fornece uma segunda populaqäo de dados.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "3.7. Benchmark local de inferéncia",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Como anålise secundåria de custo computacional, medimos regressäo logistica, MLP compacta, XGBoost",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "e Random Forest em contéineres Linux executados no Docker Desktop/WSL2. Os modelos foram",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "ajustados com parämetros fixos para a finalidade exclusiva de comparar custo de inferéncia. A qualidade",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "preditiva apresentada junto is latencias é a estimativa de Fl-macro fora da amostra obtida por separaqäo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "de endereqos de origem em Cinco partiqöes, na avaliaqäo principal dos modelos de årvores. Portanto, esse",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Fl descreve a avaliaqäo preditiva separada; näo é uma avaliaqäo dos modelos de benchmark ajustados em",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "todos os registros.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Pågina6",
+                          "y":  1123
+                      }
+                  ]
+    },
+    {
+        "page":  7,
+        "lines":  [
+                      {
+                          "text":  "Cada contéiner recebeu limite de 0,5 CPU, 512 MiB de memöria e 256 processos, sem swap, corn uma",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "thread de inferéncia. Os modelos foram servidos individualmente pelo mesmo sewiqo HTTP local. A",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "sequéncia das entradas foi identica entre os quatro modelos. Apos 200 chamadas de aquecimento,",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "registramos 5.000 chamadas individuais por modelo; medimos ainda 600 chamadas em lotes e 4.500",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "requisiqöes para vazäo em tres niveis de concorréncia. O tempo HTTP comeqa imediatamente antes do",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "envio do corpo jå serializado e termina apos a leitura integral da resposta. Inclui validaqäo e tratamento no",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "servidor, espera por fila, processarnento pelo modelo e serializaqäo da resposta; exclui a extraqäo do fluxo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "e o cålculo dos atributos. O tempo interno de prediqäo de probabilidades é registrado separadamente.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Essa foi uma finica sessäo, com ordem fixa dos modelos. Percentis e consumo de memoria säo descritivos",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "desta måquina e configuraqäo. A memoria måxima reportada é o måximo das amostras periödicas do",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "monitor do contéiner, näo o pico instantäneo de alocaqäo. A mediqäo caracteriza inferéncia HTTP de",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "vetores de atributos jå preparados.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Figura l. Protocolos de validaqäo preditiva e do custo de inferéncia. A estimativa de qualidade vem da",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "por separaqäo de endereqos de origem; as laténcias vém do benchmark local de inferéncia.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "F1-",
+                          "y":  935
+                      },
+                      {
+                          "text":  "AVALIACÄO PREDITIVA",
+                          "y":  935
+                      },
+                      {
+                          "text":  "Cinco folds pareados",
+                          "y":  935
+                      },
+                      {
+                          "text":  "Divisäo aleatåria estratificada",
+                          "y":  935
+                      },
+                      {
+                          "text":  "Grupos por assinatura exata",
+                          "y":  935
+                      },
+                      {
+                          "text":  "Grupos por endereco de origem",
+                          "y":  935
+                      },
+                      {
+                          "text":  "ributos originais e razöes derivada",
+                          "y":  935
+                      },
+                      {
+                          "text":  "imputagäo ajustada so no treino",
+                          "y":  935
+                      },
+                      {
+                          "text":  "Random Forest e XGBoost",
+                          "y":  935
+                      },
+                      {
+                          "text":  "paråmetros fixos",
+                          "y":  935
+                      },
+                      {
+                          "text":  "Predigöes fora da amostra",
+                          "y":  935
+                      },
+                      {
+                          "text":  "acro, métricas por classe e compa",
+                          "y":  935
+                      },
+                      {
+                          "text":  "ao",
+                          "y":  938
+                      },
+                      {
+                          "text":  "CUSTO DE INFERÉNCIA",
+                          "y":  938
+                      },
+                      {
+                          "text":  "Quatro modelos medidos",
+                          "y":  938
+                      },
+                      {
+                          "text":  "Logistica • MLP • XGBoost • RF",
+                          "y":  938
+                      },
+                      {
+                          "text":  "Container Docker limitado",
+                          "y":  938
+                      },
+                      {
+                          "text":  "CPU • 512 MiB • 1 thread",
+                          "y":  938
+                      },
+                      {
+                          "text":  "Uma sessäo ordenada",
+                          "y":  938
+                      },
+                      {
+                          "text":  "5.000 requisigöes por modelo",
+                          "y":  938
+                      },
+                      {
+                          "text":  "Custo observado",
+                          "y":  938
+                      },
+                      {
+                          "text":  "HTTP P50/P95/P99 e memöria",
+                          "y":  938
+                      },
+                      {
+                          "text":  "Pågina7",
+                          "y":  1123
+                      }
+                  ]
+    },
+    {
+        "page":  8,
+        "lines":  [
+                      {
+                          "text":  "4. Resultados",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "4.1. Sensibilidade ao protocolo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "A Tabela 2 mostra o desernpenho do tratamento de referéncia, que utiliza os 18 atributos originais.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Ambos os modelos apresentam valores menores na separaqäo por endereqo de origern do que na divisäo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "aleatöria estratificada. A diferenqa entre esses protocolos é de aproximadamente —(),437 ponto percentual",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "para RF e —0,366 ponto percentual para XGBoost. A diferenqa observada combina mudanqas na",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "populaqäo de treinamento e teste e nos padröes de sobreposiqäo. Ela näo isola causalmente vazamento por",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "endereqo ou por outro campo.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Tabela 2. Fl -macro fora da amostra com os 18 atributos numéricos originais.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Protocolo de validaqäo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Divisäo aleatöria estratificada",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "por assinatura exata",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "por de origem",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Fonte: anålises do estudo com UAVIDS-2025 [2].",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Random Forest",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "0,955051",
+                          "y":  433
+                      },
+                      {
+                          "text":  "0,953986",
+                          "y":  463
+                      },
+                      {
+                          "text":  "0,950677",
+                          "y":  494
+                      },
+                      {
+                          "text":  "XGBoost",
+                          "y":  403
+                      },
+                      {
+                          "text":  "0,956326",
+                          "y":  433
+                      },
+                      {
+                          "text":  "0,954612",
+                          "y":  463
+                      },
+                      {
+                          "text":  "0,952666",
+                          "y":  494
+                      },
+                      {
+                          "text":  "Os valores permanecem altos na escala da métrica, mas a queda näo pode ser convertida em uma garantia",
+                          "y":  494
+                      },
+                      {
+                          "text":  "de transferéncia. A separaqäo por assinatura e a separaqäo por endereqo de origem restringem estruturas",
+                          "y":  494
+                      },
+                      {
+                          "text":  "distintas; nenhuma substitui um teste com cenårios independentes. Além disso, comparar esses resultados",
+                          "y":  494
+                      },
+                      {
+                          "text":  "a acuråcias ou Fl de estudos com outros rotulos e pré-processamentos produziria uma ordenaqäo",
+                          "y":  494
+                      },
+                      {
+                          "text":  "inadequada",
+                          "y":  647
+                      },
+                      {
+                          "text":  "4.2. Ablaqäo pareada e estabilidade",
+                          "y":  647
+                      },
+                      {
+                          "text":  "Na separaqäo por endereqo de origem, todos os Oito intervalos condicionais que comparam cada",
+                          "y":  647
+                      },
+                      {
+                          "text":  "tratamento derivado corn a referencia incluem zero (Tabela 3). Näo hå evidéncia consistente de ganho",
+                          "y":  647
+                      },
+                      {
+                          "text":  "geral das razöes propostas. Considerando os tres protocolos, apenas dois dos 24 intervalos näo incluem",
+                          "y":  647
+                      },
+                      {
+                          "text":  "zero, ambos negativos para RF na separaqäo por assinatura, ao acrescentar a razäo entre pacotes perdidos",
+                          "y":  647
+                      },
+                      {
+                          "text":  "e transmitidos, isoladamente ou junto is outras duas razöes. Como as comparaqöes säo exploratörias e",
+                          "y":  647
+                      },
+                      {
+                          "text":  "näo ajustadas, esses casos näo sustentam uma afirmaqäo confirmatöria de inferioridade.",
+                          "y":  647
+                      },
+                      {
+                          "text":  "Tabela 3. Difereru•as de F I -macro na por endereqo de origem em ao painel de referéncia com",
+                          "y":  647
+                      },
+                      {
+                          "text":  "atributos originais. Valores em pontos percentuais; intervalos condicionais de 95%.",
+                          "y":  647
+                      },
+                      {
+                          "text":  "Modelo",
+                          "y":  951
+                      },
+                      {
+                          "text":  "Tratamento comparado",
+                          "y":  951
+                      },
+                      {
+                          "text":  "Pacotes perdidos/transmitidos",
+                          "y":  951
+                      },
+                      {
+                          "text":  "Bytes recebidos/transmitidos",
+                          "y":  951
+                      },
+                      {
+                          "text":  "Vazäo por Salto",
+                          "y":  951
+                      },
+                      {
+                          "text":  "Diferen€a (pp)",
+                          "y":  951
+                      },
+                      {
+                          "text":  "-0,006",
+                          "y":  981
+                      },
+                      {
+                          "text":  "-0,050",
+                          "y":  1011
+                      },
+                      {
+                          "text":  "40,041",
+                          "y":  1041
+                      },
+                      {
+                          "text":  "Intervalo 95% (pp)",
+                          "y":  1041
+                      },
+                      {
+                          "text":  "-0,087 a 40,079",
+                          "y":  1041
+                      },
+                      {
+                          "text":  "-0,122 a 40,022",
+                          "y":  1041
+                      },
+                      {
+                          "text":  "-0,031 a 40,112",
+                          "y":  1041
+                      },
+                      {
+                          "text":  "Pågina8",
+                          "y":  1123
+                      }
+                  ]
+    },
+    {
+        "page":  9,
+        "lines":  [
+                      {
+                          "text":  "Modelo",
+                          "y":  119
+                      },
+                      {
+                          "text":  "XGBoost",
+                          "y":  179
+                      },
+                      {
+                          "text":  "XGBoost",
+                          "y":  209
+                      },
+                      {
+                          "text":  "XGBoost",
+                          "y":  239
+                      },
+                      {
+                          "text":  "XGBoost",
+                          "y":  269
+                      },
+                      {
+                          "text":  "Tratamento comparado",
+                          "y":  269
+                      },
+                      {
+                          "text":  "Trés razöes em conjunto",
+                          "y":  269
+                      },
+                      {
+                          "text":  "Pacotes perdidos/transmitidos",
+                          "y":  269
+                      },
+                      {
+                          "text":  "Bytes recebidos/transmitidos",
+                          "y":  269
+                      },
+                      {
+                          "text":  "Vazäo por Salto",
+                          "y":  269
+                      },
+                      {
+                          "text":  "Trés razöes em conjunto",
+                          "y":  269
+                      },
+                      {
+                          "text":  "Diferen€a (pp)",
+                          "y":  269
+                      },
+                      {
+                          "text":  "40,046",
+                          "y":  149
+                      },
+                      {
+                          "text":  "-0,018",
+                          "y":  179
+                      },
+                      {
+                          "text":  "-0,044",
+                          "y":  209
+                      },
+                      {
+                          "text":  "40,016",
+                          "y":  239
+                      },
+                      {
+                          "text":  "40,003",
+                          "y":  269
+                      },
+                      {
+                          "text":  "Intervalo 95% (pp)",
+                          "y":  269
+                      },
+                      {
+                          "text":  "-O,034a 40,131",
+                          "y":  269
+                      },
+                      {
+                          "text":  "-0,084 a 40,039",
+                          "y":  269
+                      },
+                      {
+                          "text":  "-0,097 a 40,010",
+                          "y":  269
+                      },
+                      {
+                          "text":  "-0,036 a 40,084",
+                          "y":  269
+                      },
+                      {
+                          "text":  "-0,043 a 40,053",
+                          "y":  269
+                      },
+                      {
+                          "text":  "Fonte: anålises do estudo com UAVIDS-2025 [2].",
+                          "y":  269
+                      },
+                      {
+                          "text":  "A repetiqäo com tres inicializaqöes avalia a sensibilidade å aleatoriedade dos modelos nos mesmos dados",
+                          "y":  269
+                      },
+                      {
+                          "text":  "e partiqöes. Para RF, ao acrescentar vazäo por Salto, a diferenqa media em relaqäo å referéncia é +0,051",
+                          "y":  269
+                      },
+                      {
+                          "text":  "ponto percentual, com amplitude de +0,041 a +0,058. Para XGBoost, a rnédia é +0,006 ponto percentual e",
+                          "y":  269
+                      },
+                      {
+                          "text":  "a direqäo varia entre inicializaqöes. Em 21 dos 24 contrastes pareados dessa repetiqäo, o intervalo inclui",
+                          "y":  269
+                      },
+                      {
+                          "text":  "zero. A pequena magnitude e a instabilidade näo autorizam escolher essa razäo corno vencedora geral,",
+                          "y":  269
+                      },
+                      {
+                          "text":  "sobretudo sem uma margem de relevåncia pråtica estabelecida previamente.",
+                          "y":  269
+                      },
+                      {
+                          "text":  "4.3. Redundåncia, cobertura e sensibilidade ao recorte",
+                          "y":  269
+                      },
+                      {
+                          "text":  "A razäo entre pacotes perdidos e transmitidos é pröxima de PacketDropRate em 122.148 dos 122.171",
+                          "y":  269
+                      },
+                      {
+                          "text":  "registros, sob toleräncias absoluta 10-8 e relativa 10-5. A correlaqäo de Pearson é praticamente unitåria.",
+                          "y":  269
+                      },
+                      {
+                          "text":  "Portanto, essa variåvel derivada reproduz quase inteiramente um atributo existente. Acrescentar uma",
+                          "y":  269
+                      },
+                      {
+                          "text":  "cöpia aproximada pode alterar a seleqäo de variåveis pelas årvores, mas isso näo representa, por si so,",
+                          "y":  269
+                      },
+                      {
+                          "text":  "informaqäo nova ou contribuiqäo fisica.",
+                          "y":  269
+                      },
+                      {
+                          "text":  "A razäo de vazäo por Salto é indefinida em 38.501 linhas, aproximadamente 31,50/0 dos registros. A",
+                          "y":  269
+                      },
+                      {
+                          "text":  "auséncia se concentra de forma desigual nas classes: ocorre em cerca de 51,30/0 de Normal e 48,8% de",
+                          "y":  269
+                      },
+                      {
+                          "text":  "Blackhole. Assim, mudangas associadas å inclusäo dessa razäo podem refletir a cobertura e a imputaqäo,",
+                          "y":  269
+                      },
+                      {
+                          "text":  "além dos valores da variåvel. Sem uma ablaqäo adicional que separe esses mecanismos, näo atribuimos o",
+                          "y":  269
+                      },
+                      {
+                          "text":  "efeito a uma medida de qualidade de enlace.",
+                          "y":  269
+                      },
+                      {
+                          "text":  "Existem 81 valores de PacketDropRate acima de um no arquivo. Mantivemos os dados originais na",
+                          "y":  269
+                      },
+                      {
+                          "text":  "anålise principal. Na anålise de sensibilidade, 0 recorte em [0,1] altera 0 Fl-macro da separaqäo por",
+                          "y":  269
+                      },
+                      {
+                          "text":  "origern em +0,043 ponto percentual para RF e +0,003 para XGBoost. Os dois intervalos condicionais",
+                          "y":  269
+                      },
+                      {
+                          "text":  "incluem zero. O resultado näo valida o recorte como corregäo, pois a förmula exata do coletor e o",
+                          "y":  269
+                      },
+                      {
+                          "text":  "tratamento dos contadores continuam sem confirmaqäo.",
+                          "y":  269
+                      },
+                      {
+                          "text":  "4.4. Erros por classe",
+                          "y":  269
+                      },
+                      {
+                          "text":  "A Tabela 4 detalha o XGBoost no tratamento de referéncia, com os 18 atributos originais, na separaqäo",
+                          "y":  269
+                      },
+                      {
+                          "text":  "por endereqo de origem. Blackhole apresenta revocaqäo de 0,861241, enquanto seu Fl e o de Wormhole",
+                          "y":  269
+                      },
+                      {
+                          "text":  "säo inferiores aos das demais classes. Uma rnédia global elevada pode, portanto, esconder dificuldades",
+                          "y":  269
+                      },
+                      {
+                          "text":  "Pågina9",
+                          "y":  1123
+                      }
+                  ]
+    },
+    {
+        "page":  10,
+        "lines":  [
+                      {
+                          "text":  "especificas. Essa observaqäo é compativel com discussöes anteriores sobre esses ataques [3], mas näo",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "determina sua causa fisica.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Tabela 4. Desempenho por classe para o XGBoost com os atributos originais na por de origem.",
+                          "y":  1123
+                      },
+                      {
+                          "text":  "Classe",
+                          "y":  211
+                      },
+                      {
+                          "text":  "Normal Traffic",
+                          "y":  211
+                      },
+                      {
+                          "text":  "Blackhole Attack",
+                          "y":  211
+                      },
+                      {
+                          "text":  "Flooding Attack",
+                          "y":  211
+                      },
+                      {
+                          "text":  "Sybil Attack",
+                          "y":  211
+                      },
+                      {
+                          "text":  "Wormhole Attack",
+                          "y":  211
+                      },
+                      {
+                          "text":  "Fonte: anålises do estudo com UAVIDS-2025 [2].",
+                          "y":  211
+                      },
+                      {
+                          "text":  "Precisäo",
+                          "y":  211
+                      },
+                      {
+                          "text":  "0,989284",
+                          "y":  241
+                      },
+                      {
+                          "text":  "0,956568",
+                          "y":  271
+                      },
+                      {
+                          "text":  "0,991110",
+                          "y":  301
+                      },
+                      {
+                          "text":  "0,977172",
+                          "y":  331
+                      },
+                      {
+                          "text":  "0,861059",
+                          "y":  361
+                      },
+                      {
+                          "text":  "Revoca€äo",
+                          "y":  211
+                      },
+                      {
+                          "text":  "0,991174",
+                          "y":  241
+                      },
+                      {
+                          "text":  "0,861241",
+                          "y":  271
+                      },
+                      {
+                          "text":  "0,966491",
+                          "y":  301
+                      },
+                      {
+                          "text":  "0,995597",
+                          "y":  331
+                      },
+                      {
+                          "text":  "0,946485",
+                          "y":  361
+                      },
+                      {
+                          "text":  "Fl",
+                          "y":  211
+                      },
+                      {
+                          "text":  "0,990228",
+                          "y":  241
+                      },
+                      {
+                          "text":  "0,906405",
+                          "y":  271
+                      },
+                      {
+                          "text":  "0,978646",
+                          "y":  301
+                      },
+                      {
+                          "text":  "0,986299",
+                          "y":  331
+                      },
+                      {
+                          "text":  "0,901753",
+                          "y":  361
+                      },
+                      {
+                          "text":  "Hå 281 fluxos de ataque classificados como normal, entre 95.999 fluxos de ataque, e 231 fluxos normais",
+                          "y":  361
+                      },
+                      {
+                          "text":  "classificados como ataque, entre 26.172 fluxos normais. Esses valores correspondem a aproximadamente",
+                          "y":  361
+                      },
+                      {
+                          "text":  "0,2930/0 de ataques perdidos e 0,8830/0 de falsos alarmes nesse conjunto. Eles näo fornecem taxas por",
+                          "y":  361
+                      },
+                      {
+                          "text":  "minuto, impacto de missäo ou custos de operaqäo. A prevaléncia de ataques na simulaqäo também difere",
+                          "y":  361
+                      },
+                      {
+                          "text":  "de uma distribuiqäo operacional ainda näo medida.",
+                          "y":  361
+                      },
+                      {
+                          "text":  "4.5. Qualidade preditiva e custo de inferéncia",
+                          "y":  361
+                      },
+                      {
+                          "text":  "A Tabela 5 apresenta as estimativas fora da amostra obtidas na separaqäo por endereqo de origem, junto å",
+                          "y":  361
+                      },
+                      {
+                          "text":  "laténcia HTTP dos respectivos modelos no contéiner. XGBoost teve o maior Fl-macro observado",
+                          "y":  361
+                      },
+                      {
+                          "text":  "(0,952666) e mediana HTTP de 1,107 Ins. O RF ficou proximo em Fl-macro (0,950677), com mediana",
+                          "y":  361
+                      },
+                      {
+                          "text":  "de 5,856 ms e P95 de 51,302 rns. A MLP teve laténcia semelhante å regressäo logistica, mas maior Fl-",
+                          "y":  361
+                      },
+                      {
+                          "text":  "macro nesta avaliaqäo. As diferenqas pequenas entre modelos näo foram testadas como comparaqäo",
+                          "y":  361
+                      },
+                      {
+                          "text":  "confirmatöria, e a sessäo ünica näo sustenta um ranking eståvel para outros computadores.",
+                          "y":  361
+                      },
+                      {
+                          "text":  "Tabela 5. F I -macro fora da amostra na separaqäo por endereso de origem e custo HTTP em contéiner com CPU",
+                          "y":  361
+                      },
+                      {
+                          "text":  "e 512 MiB-",
+                          "y":  361
+                      },
+                      {
+                          "text":  "Modelo",
+                          "y":  827
+                      },
+                      {
+                          "text":  "Regressäo logistica",
+                          "y":  827
+                      },
+                      {
+                          "text":  "MLP compacta",
+                          "y":  827
+                      },
+                      {
+                          "text":  "XGBoost",
+                          "y":  926
+                      },
+                      {
+                          "text":  "Random Forest",
+                          "y":  926
+                      },
+                      {
+                          "text":  "Fl-macro",
+                          "y":  827
+                      },
+                      {
+                          "text":  "0,812079",
+                          "y":  866
+                      },
+                      {
+                          "text":  "0,929876",
+                          "y":  896
+                      },
+                      {
+                          "text":  "0,952666",
+                          "y":  926
+                      },
+                      {
+                          "text":  "0,950677",
+                          "y":  956
+                      },
+                      {
+                          "text":  "HTTP",
+                          "y":  818
+                      },
+                      {
+                          "text":  "PSO ms",
+                          "y":  818
+                      },
+                      {
+                          "text":  "0,923",
+                          "y":  866
+                      },
+                      {
+                          "text":  "0,912",
+                          "y":  896
+                      },
+                      {
+                          "text":  "1,107",
+                          "y":  926
+                      },
+                      {
+                          "text":  "5,856",
+                          "y":  956
+                      },
+                      {
+                          "text":  "P95 ms",
+                          "y":  956
+                      },
+                      {
+                          "text":  "1,039",
+                          "y":  866
+                      },
+                      {
+                          "text":  "1,034",
+                          "y":  896
+                      },
+                      {
+                          "text":  "1,268",
+                          "y":  926
+                      },
+                      {
+                          "text":  "51,302",
+                          "y":  956
+                      },
+                      {
+                          "text":  "P99 ms",
+                          "y":  956
+                      },
+                      {
+                          "text":  "1,132",
+                          "y":  866
+                      },
+                      {
+                          "text":  "1,208",
+                          "y":  896
+                      },
+                      {
+                          "text":  "8,084",
+                          "y":  926
+                      },
+                      {
+                          "text":  "52,782",
+                          "y":  956
+                      },
+                      {
+                          "text":  "Inferéncia",
+                          "y":  817
+                      },
+                      {
+                          "text":  "P50 ms",
+                          "y":  817
+                      },
+                      {
+                          "text":  "o, 166",
+                          "y":  817
+                      },
+                      {
+                          "text":  "o, 170",
+                          "y":  817
+                      },
+                      {
+                          "text":  "0,344",
+                          "y":  926
+                      },
+                      {
+                          "text":  "4,941",
+                          "y":  956
+                      },
+                      {
+                          "text":  "Memåria",
+                          "y":  817
+                      },
+                      {
+                          "text":  "mix. MiB",
+                          "y":  817
+                      },
+                      {
+                          "text":  "74,89",
+                          "y":  866
+                      },
+                      {
+                          "text":  "73,32",
+                          "y":  896
+                      },
+                      {
+                          "text":  "82,30",
+                          "y":  926
+                      },
+                      {
+                          "text":  "489,00",
+                          "y":  956
+                      },
+                      {
+                          "text":  "Fonte: estimativas de F I -macro fora da amostra e mediqöes do benchmark local de inferéncia.",
+                          "y":  956
+                      },
+                      {
+                          "text":  "Os resultados mostram uma troca observada entre desempenho preditivo e custo nessa configuraqäo. O",
+                          "y":  956
+                      },
+                      {
+                          "text":  "tempo HTTP näo representa o tempo total até detectar um ataque: a coleta do tråfego e o cålculo dos 18",
+                          "y":  956
+                      },
+                      {
+                          "text":  "atributos nä0 fazern parte do benchmark. Os percentis altos e a memöria proxima do limite para RF",
+                          "y":  956
+                      },
+                      {
+                          "text":  "Pägina I O",
+                          "y":  956
+                      }
+                  ]
+    },
+    {
+        "page":  11,
+        "lines":  [
+                      {
+                          "text":  "tarnbém recomendam avaliar a distribuiqäo e a viabilidade, em vez de selecionar o candidato apenas pela",
+                          "y":  956
+                      },
+                      {
+                          "text":  "mediana.",
+                          "y":  137
+                      },
+                      {
+                          "text":  "Päginal I",
+                          "y":  137
+                      }
+                  ]
+    },
+    {
+        "page":  12,
+        "lines":  [
+                      {
+                          "text":  "Figura 2. Fl -macro fora da amostra na por de origem e percentis de laténcia HTTP medidos no",
+                          "y":  137
+                      },
+                      {
+                          "text":  "benchmark local. O painel de laténcia usa escala logaritmica; as métricas de qualidade e laténcia tém origens",
+                          "y":  137
+                      },
+                      {
+                          "text":  "experimentais distintas.",
+                          "y":  137
+                      },
+                      {
+                          "text":  "Regressäo logistica",
+                          "y":  137
+                      },
+                      {
+                          "text":  "MLP compacta",
+                          "y":  137
+                      },
+                      {
+                          "text":  "XGBoost",
+                          "y":  392
+                      },
+                      {
+                          "text":  "Random Forest",
+                          "y":  392
+                      },
+                      {
+                          "text":  "5. Discussäo",
+                          "y":  392
+                      },
+                      {
+                          "text":  "Percentil",
+                          "y":  188
+                      },
+                      {
+                          "text":  "O P50 P95 p99",
+                          "y":  188
+                      },
+                      {
+                          "text":  "0,812 0",
+                          "y":  188
+                      },
+                      {
+                          "text":  "0,930",
+                          "y":  318
+                      },
+                      {
+                          "text":  "0,953",
+                          "y":  391
+                      },
+                      {
+                          "text":  "0.951",
+                          "y":  463
+                      },
+                      {
+                          "text":  "Fl-macro",
+                          "y":  539
+                      },
+                      {
+                          "text":  "10",
+                          "y":  517
+                      },
+                      {
+                          "text":  "50",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Laténcia HTTP (ms, escala logaritmica)",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Os resultados sustentam uma contribuiqäo metodolögica delimitada: caracterizar como tres protocolos e",
+                          "y":  517
+                      },
+                      {
+                          "text":  "quatro tratamentos com razöes derivadas alteram a classificaqäo fechada no mesmo benchmark, em",
+                          "y":  517
+                      },
+                      {
+                          "text":  "comparaqäo com um painel de referéncia formado pelos atributos originais. A rastreabilidade e o relato",
+                          "y":  517
+                      },
+                      {
+                          "text":  "dos resultados negativos ajudam a evitar selecionar uma configuraqäo favoråvel e apresentå-la corno",
+                          "y":  517
+                      },
+                      {
+                          "text":  "melhoria generalizåvel. A contribuiqäo depende de sua utilidade para leitores que reutilizam",
+                          "y":  517
+                      },
+                      {
+                          "text":  "UAVIDS-2025; ela näo decorre de introduzir RF, XGBoost ou separaqäo por origem.",
+                          "y":  517
+                      },
+                      {
+                          "text":  "A principal implicaqäo da anålise é revisar a interpretaqäo das razöes. A razäo entre pacotes perdidos e",
+                          "y":  517
+                      },
+                      {
+                          "text":  "transmitidos é quase redundante; a razäo entre bytes recebidos e transmitidos näo mede energia; e a razäo",
+                          "y":  517
+                      },
+                      {
+                          "text":  "de vazäo por Salto tern cobertura incompleta. Nomes intuitivos de atributos näo substituem uma ligaqäo",
+                          "y":  517
+                      },
+                      {
+                          "text":  "verificåvel corn o processo de coleta. Para apoiar uma interpretaqäo de enlace ou mobilidade, seria",
+                          "y":  517
+                      },
+                      {
+                          "text":  "necessårio conhecer as formulas e janelas usadas pelo simulador e distinguir o efeito do valor derivado do",
+                          "y":  517
+                      },
+                      {
+                          "text":  "efeito de sua auséncia.",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Os escores näo estabelecem superioridade sobre a literatura. Estudos recentes usam diferentes divisöes,",
+                          "y":  517
+                      },
+                      {
+                          "text":  "transformaqöes, classes e objetivos [3—51. Uma comparaqäo numérica justa exigiria executar métodos",
+                          "y":  517
+                      },
+                      {
+                          "text":  "concorrentes no mesmo protocolo e orqamento, com pré-processamento explicitado. Isso seria uma",
+                          "y":  517
+                      },
+                      {
+                          "text":  "extensäo especifica e näo um requisito para descrever honestamente a presente avaliaqäo interna.",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Pägina 12",
+                          "y":  517
+                      }
+                  ]
+    },
+    {
+        "page":  13,
+        "lines":  [
+                      {
+                          "text":  "6. Ameaqas validade",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Validade externa: todos os testes usam um CSV simulado. Endereqos retidos näo representam execuqöes",
+                          "y":  517
+                      },
+                      {
+                          "text":  "independentes ou UAVs fisicos. Näo hå teste em tråfego real, novas topologias ou ataques desconhecidos.",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Uma avaliaqäo externa exige um conjunto com semantica e rötulos compativeis ou uma tarefa de",
+                          "y":  517
+                      },
+                      {
+                          "text":  "transferéncia definida antes de observar os resultados.",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Validade de construto: as descriqöes püblicas näo bastam para reconstruir o instante de disponibilidade de",
+                          "y":  517
+                      },
+                      {
+                          "text":  "todos os atributos, as formulas de coleta ou o tratamento de fluxos incompletos. Estatisticas agregadas",
+                          "y":  517
+                      },
+                      {
+                          "text":  "podem exigir a conclusäo de urn fluxo. O benchmark mede requisiqöes HTTP locais para vetores jå",
+                          "y":  517
+                      },
+                      {
+                          "text":  "preparados; por isso, näo estima o atraso total de detecqäo a partir dos pacotes de rede.",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Validade interna: os paråmetros säo fixos e a comparaqäo de atributos é pareada, mas a organizaqäo por",
+                          "y":  517
+                      },
+                      {
+                          "text":  "classe, as portas e os padröes da simulaqäo podem facilitar a classificaqäo. A separaqäo por assinatura",
+                          "y":  517
+                      },
+                      {
+                          "text":  "controla duplicaqäo exata, näo dependéncia entre registros semanticamente semelhantes. A separaqäo por",
+                          "y":  517
+                      },
+                      {
+                          "text":  "endereqo controla essa string, näo toda a estrutura de geraqäo. As diferenqas entre protocolos näo",
+                          "y":  517
+                      },
+                      {
+                          "text":  "constituem experimento causal de vazamento.",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Validade estatistica: os intervalos säo exploratörios e condicionais is prediqöes fixas. A unidade real de",
+                          "y":  517
+                      },
+                      {
+                          "text":  "independencia das simulaqöes näo estå disponivel. Mültiplas comparaqöes näo receberam corregäo, e trés",
+                          "y":  517
+                      },
+                      {
+                          "text":  "sementes näo caracterizam a incerteza de generalizaqäo. Resultados pequenos e intervalos com zero näo",
+                          "y":  517
+                      },
+                      {
+                          "text":  "permitem declarar equivaléncia entre condiqöes.",
+                          "y":  517
+                      },
+                      {
+                          "text":  "7. Conclusäo",
+                          "y":  517
+                      },
+                      {
+                          "text":  "No conjunto UAVIDS-2025, Random Forest e XGBoost apresentam sensibilidade ao protocolo de",
+                          "y":  517
+                      },
+                      {
+                          "text":  "avaliaqäo, com menor F I-macro na separaqäo por origem do que na divisäo aleatoria. As razöes derivadas",
+                          "y":  517
+                      },
+                      {
+                          "text":  "näo demonstram melhoria geral consistente; a auditoria revela redundåncia quase completa de uma delas",
+                          "y":  517
+                      },
+                      {
+                          "text":  "e auséncia substancial de outra. A reproduqäo em ambiente limpo confirmou as métricas e tabelas, dentro",
+                          "y":  517
+                      },
+                      {
+                          "text":  "da toleräncia documentada.",
+                          "y":  517
+                      },
+                      {
+                          "text":  "As conclusöes se limitam å classificaqäo das Cinco classes conhecidas em vetores do mesmo benchmark e",
+                          "y":  517
+                      },
+                      {
+                          "text":  "ao custo HTTP local medido nesta sessäo. A evoluqäo cientifica prioritåria é identificar execuqöes",
+                          "y":  517
+                      },
+                      {
+                          "text":  "independentes e a sernåntica temporal dos atributos, definir uma validaqäo externa compativel e avaliar a",
+                          "y":  517
+                      },
+                      {
+                          "text":  "inferéncia em plataformas embarcadas junto ao cålculo dos atributos. A versäo atual pode ser avaliada",
+                          "y":  517
+                      },
+                      {
+                          "text":  "como estudo critico e reprodutivel de benchmark, desde que a revisäo especializada e a revista",
+                          "y":  517
+                      },
+                      {
+                          "text":  "considerem essa contribuiqäo suficiente.",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Pägina 13",
+                          "y":  517
+                      }
+                  ]
+    },
+    {
+        "page":  14,
+        "lines":  [
+                      {
+                          "text":  "Disponibilidade de dados e cådigo",
+                          "y":  517
+                      },
+                      {
+                          "text":  "os dados estäo disponiveis no Zenodo, DOI 10.5281/zenodo.15336998, licenqa CC BY 4.0 C6digo,",
+                          "y":  517
+                      },
+                      {
+                          "text":  "configuraqöes, protocolos, prediqöes e pacotes verificåveis foram preparados localmente. Endereqo",
+                          "y":  517
+                      },
+                      {
+                          "text":  "püblico, licenca do cödigo e DOI do arquivo de reproduqäo: inserir apös a decisäo dos autores e o",
+                          "y":  517
+                      },
+                      {
+                          "text":  "deposito. Nenhum deposito püblico é declarado corno concluido nesta versäo.",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Declaraqöes dos autores",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Contribuiqöes, financiamento, conflitos de interesse e agradecimentos: preencher e aprovar pelos autores;",
+                          "y":  517
+                      },
+                      {
+                          "text":  "a auséncia de financiamento ou de conflitos näo foi presumida. Näo houve coleta com participantes",
+                          "y":  517
+                      },
+                      {
+                          "text":  "humanos relatada neste estudo; eventuais exigencias institucionais devern ser conferidas pelos autores.",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Assisténcia por IA: ferramentas de IA auxiliaram a implementaqäo, a organizaqäo da anålise e a redaqäo",
+                          "y":  517
+                      },
+                      {
+                          "text":  "preliminar. Os autores devern revisar integralmente métodos, resultados, referéncias e texto, assumir a",
+                          "y":  517
+                      },
+                      {
+                          "text":  "responsabilidade pelo conteüdo e adequar esta declaraqäo å politica da revista escolhida. Ferramentas de",
+                          "y":  517
+                      },
+                      {
+                          "text":  "IA näo devem figurar como autores.",
+                          "y":  517
+                      },
+                      {
+                          "text":  "Referéncias",
+                          "y":  566
+                      },
+                      {
+                          "text":  "[l] Zeng, Q.; Bashir, A.; Nait-Abdesselam, F. UAVIDS-2025: A Benchmark Dataset for Intrusion Detection in",
+                          "y":  566
+                      },
+                      {
+                          "text":  "UAV Networks Using Machine Learning Techniques. IEEE Conference on Communications and Network Security",
+                          "y":  566
+                      },
+                      {
+                          "text":  "(CNS), 2025, p. 1-9. https•Wdoi.org,\u002710.1109/CNS66487.2025.11194990.",
+                          "y":  566
+                      },
+                      {
+                          "text":  "[2] Zeng, Q.; Bashir, A.; Nait-Abdesselam, F. UAVIDS-2025. Dataset, versäo 1. Zenodo, 2025.",
+                          "y":  566
+                      },
+                      {
+                          "text":  "https://doi.org/10.5281/zenodo.15336998. Registro: https:Dzenodo.org/records/15336998. Acesso em 27 set. 2026.",
+                          "y":  566
+                      },
+                      {
+                          "text":  "[31 Zarkadis, I.-C.; Douligeris, C. XAI and Statistical Analysis for Reliable Intrusion Detection in the",
+                          "y":  566
+                      },
+                      {
+                          "text":  "UAVIDS-2025 Dataset: From Tree to Hybrid and Tabular DNN Ensembles. arXiv:2605.13922v2, 2026.",
+                          "y":  566
+                      },
+                      {
+                          "text":  "https://doi.org/10.48550/arXiv.2605.13922. Versäo consultada: IO jul. 2026; o registro informa aceitaqäo no IEEE",
+                          "y":  566
+                      },
+                      {
+                          "text":  "CITS 2026.",
+                          "y":  566
+                      },
+                      {
+                          "text":  "[41 Aksu Demir, I. E; Gumus, F. Source-Rate Representations and Attention Autoencoders for Leakage-Safe Zero-",
+                          "y":  566
+                      },
+                      {
+                          "text":  "Day Sybil Detection in UAV Networks. Electronics, v. 15, n. 17, artigo 3966, 2026.",
+                          "y":  566
+                      },
+                      {
+                          "text":  "https://doi.org/10.3390/electronics15173966.",
+                          "y":  819
+                      },
+                      {
+                          "text":  "[51 Islam, M. Sa; Ahmed, F.; Ishtiaq, W.; Hossain, M. A; Islam, M. S.; Tarek, M. M. Advanced explainable",
+                          "y":  819
+                      },
+                      {
+                          "text":  "ensemble models for multi-class intrusion detection in heterogeneous drone and industrial networks. Journal on",
+                          "y":  819
+                      },
+                      {
+                          "text":  "Information Security, v. 2026, artigo 14, 2026. https://doi.org/10.1186/s13635-026-00234-w.",
+                          "y":  819
+                      },
+                      {
+                          "text":  "[6] Breiman, L. Random Forests. Machine Learning, v. 45, p. 5—32, 2001.",
+                          "y":  819
+                      },
+                      {
+                          "text":  "https://doi.org/lO.1023/A:1010933404324.",
+                          "y":  921
+                      },
+                      {
+                          "text":  "[7] Chen, T.; Guestrin, C. XGBoost: A Scalable Tree Boosting System. Manuscrito dos autores, arXiv:1603.02754,",
+                          "y":  921
+                      },
+                      {
+                          "text":  "2016. https://doi.ory\u002710.48550/arXiv.1603.02754.",
+                          "y":  921
+                      },
+                      {
+                          "text":  "[8] Pedregosa, F. et al. Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research, v. 12, p.",
+                          "y":  921
+                      },
+                      {
+                          "text":  "2825—2830, 2011. https://www.jmlr.org/papers/v12}pedregosalla.html.",
+                          "y":  921
+                      },
+                      {
+                          "text":  "Pägina 14",
+                          "y":  921
+                      }
+                  ]
+    }
+]

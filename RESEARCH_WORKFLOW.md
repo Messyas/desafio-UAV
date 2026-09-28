@@ -150,3 +150,16 @@ Docker, opcional e fora do requisito mínimo:
 ```
 
 Exige Docker disponível e executa nova medição de bancada com configs/docker_local_v2.json. Não faz parte da preparação dos dados, treino ou tracking. Descreve Docker Desktop/WSL2 em loopback; não mede bateria ou hardware embarcado.
+
+### Painel de cinco modelos para comparação de latência
+
+O protocolo `protocol/docker_latency_v4.md` preserva as rodadas históricas e acrescenta regressão logística, MLP compacta e Extra Trees. RF passa a usar os parâmetros da baseline v1 (200 árvores/folha 1). Os cinco artefatos são reajustados para custo; qualidade vem das predições S2 OOF, não do ajuste em todos os dados. A rodada v4 foi executada: quatro modelos medidos e Extra Trees com OOM no carregamento. Registro em protocol/latency_results_20260927.md.
+
+```powershell
+.\.venv-research\Scripts\python.exe src\uavids_study\freeze_models.py --config configs\deployment_latency_v2.json
+.\.venv-research\Scripts\python.exe src\uavids_study\docker_benchmark.py --config configs\docker_latency_v4.json
+.\.venv-research\Scripts\python.exe tools\build_latency_comparison.py
+.\.venv-research\Scripts\python.exe tools\verify_latency_benchmark.py
+```
+
+O serviço Docker Linux precisa estar disponível. Todos recebem a mesma sequência de entradas e limite de 0,5 CPU/512 MiB, sem swap. O ajuste usa quatro threads e a inferência v4 usa uma; a v3 com quatro threads e carregador anterior permanece histórica. Falhas de modelo são registradas e os demais candidatos continuam. Um resultado de falta de memória não é substituído por uma estimativa de latência. A ordem fixa da sessão também limita a interpretação de pequenas diferenças. Novas configurações exigem novos IDs; a retomada recusa alterar a configuração congelada.

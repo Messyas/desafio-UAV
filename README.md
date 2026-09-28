@@ -55,6 +55,16 @@ O novo ciclo foi executado: v4 concluiu 150/150 jobs A0–A4 em S0/S1/S2; v5 con
 
 O executor congela dados, folds, configuração, código e ambiente; a análise recusa OOF incompleto. As derivadas ficam no pipeline e a imputação usa somente o treino. A auditoria encontrou loss_ratio praticamente redundante com PacketDropRate; seu eventual efeito precisa ser medido, sem ser anunciado como novidade.
 
+## Novo manuscrito e fechamento
+
+O novo artigo e os passos restantes estão em [manuscript/](manuscript/README.md): `ARTIGO_UAVIDS2025_REVISADO.docx` e `PASSOS_PARA_SUBMISSAO.docx`. As tabelas do artigo são geradas dos resultados verificados; o documento original permanece preservado. Ainda faltam revisão dos autores, escolha do periódico, declarações, licença do código, depósito público e adaptação ao template. A conferência visual da paginação no Word está pendente.
+
+## Comparação de latência ampliada
+
+O [protocolo Docker v4](protocol/docker_latency_v4.md) amplia a bancada para regressão logística, MLP compacta, XGBoost, Random Forest e Extra Trees, com 0,5 CPU, 512 MiB, mesma sequência de entradas e uma thread de inferência. Os hiperparâmetros e sementes de ajuste correspondem à baseline preditiva. A execução tentou os cinco modelos: quatro concluíram e Extra Trees sofreu falta de memória ao carregar. Consulte os [resultados verificados](protocol/latency_results_20260927.md). A v3 e suas falhas foram preservadas; não misturar seus quantis com v4.
+
+`tools/build_latency_comparison.py` verifica a correspondência dos modelos e junta F1-macro OOF S2 ao custo medido. `tools/verify_latency_benchmark.py` confere contagens, quotas e pareamento das entradas. Falhas não recebem latência numérica. A bancada continua local: Docker não reproduz ARM, rádio, coleta de atributos ou energia.
+
 ## MLflow opcional
 
 MLflow serve para consultar e comparar experimentos. CSV/JSON e predições salvas continuam sendo a fonte científica. O exportador usa [registro manual de tracking](https://mlflow.org/docs/latest/ml/tracking/tracking-api/), sem registry, promoção de modelo ou treino automático.

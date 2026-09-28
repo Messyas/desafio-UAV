@@ -1,0 +1,68 @@
+{
+  "date": "2026-09-27",
+  "generator": "tools/build_article_documents.ps1",
+  "figure_generator": "tools/build_article_figures.py",
+  "article_preset": "narrative_proposal",
+  "article_override": "academic_manuscript: Times New Roman; black headings; title 16pt",
+  "steps_preset": "compact_reference_guide",
+  "steps_override": "plain_masthead: title 16pt; subtitle 10pt; no metadata table",
+  "header_pattern": "memo_masthead: plain title stack; no rule or metadata table",
+  "geometry": "Letter; 1in margins; 9360 DXA tables; 120 DXA indent; 80/80/120/120 margins",
+  "source_tables": [
+    {
+      "path": "reports\\feature_ablation_v4\\pooled_metrics.csv",
+      "sha256": "04fa67a272059328dd686effc61a9490c1c23e317144b8d64a9befcc1f3387a5"
+    },
+    {
+      "path": "reports\\feature_ablation_v4\\class_metrics.csv",
+      "sha256": "e2259316d069719871c2883d70d007156c5fed6a3b48c29530d8ab705f1e45df"
+    },
+    {
+      "path": "reports\\feature_ablation_v4\\paired_comparisons.csv",
+      "sha256": "41736517f45017dd858ecd5d99e5096df5dbd6ef994125ec2826f863f2a9123a"
+    },
+    {
+      "path": "reports\\docker_latency_v4\\quality_latency_comparison.csv",
+      "sha256": "53545965285a6fb2343eefd24f0bc99e5b7b3db4ab7c6df602949517390a666e"
+    },
+    {
+      "path": "manuscript\\figures\\figura_1_metodologia.png",
+      "sha256": "dac3c724309b07ff3d17166557b4a42abe0e1d33ae77751ec29cd5c46aa75697"
+    },
+    {
+      "path": "manuscript\\figures\\figura_1_metodologia.svg",
+      "sha256": "bdaa1e77bd8c1c4178996be45188b7fbb859be31172fd122cd40398aa4816e26"
+    },
+    {
+      "path": "manuscript\\figures\\figura_2_qualidade_latencia.png",
+      "sha256": "df8c2dde2ad371f1bc6634811723c85754f6142b96011803366375e7f08444cc"
+    },
+    {
+      "path": "manuscript\\figures\\figura_2_qualidade_latencia.svg",
+      "sha256": "29ed88a4db3ed4d600592d5512dadb0f710638c10eab57d4671a0cdf7177daa4"
+    },
+    {
+      "path": "tools\\build_article_figures.py",
+      "sha256": "32eb77cfec5f47bce2178c5767f8cd3461b426b9d1df6caf4b8b630414e3c189"
+    }
+  ],
+  "documents": [
+    {
+      "file": "ARTIGO_UAVIDS2025_REVISADO.docx",
+      "paragraphs": 91,
+      "tables": 6,
+      "figures": 2,
+      "sha256": "a41cd51d15043a352a2f2a5acaff4a7536e4cc1968b132877138c335ae70ea70",
+      "rendered": true
+    },
+    {
+      "file": "PASSOS_PARA_SUBMISSAO.docx",
+      "paragraphs": 40,
+      "tables": 0,
+      "figures": 0,
+      "sha256": "050ead184b6bad9500005f90413fce756a4e45e61ce9e03bf3a683fb788bbd0f",
+      "rendered": false
+    }
+  ],
+  "visual_qa": "LibreOffice: artigo renderizado em 10 paginas; um quadro, cinco tabelas, duas figuras e referencias inspecionados visualmente."
+}

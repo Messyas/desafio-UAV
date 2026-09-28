@@ -64,3 +64,16 @@ Este arquivo não transfere autoria científica para a ferramenta. Os pesquisado
 - Trabalho: matriz comparativa com fontes primárias; auditoria semântica com o texto original dos autores; decisão de que S3 não pode ser reconstruído com o material atual; triagem editorial; minuta conservadora em Markdown; verificação da licença CC BY 4.0 pela API do registro específico do Zenodo; reprodução em clone limpo com identificador próprio.
 - A redação, as escolhas de contribuição e as interpretações estatísticas exigem revisão dos pesquisadores. Nenhuma avaliação em cenário externo, teste embarcado ou confirmação prospectiva foi produzida. A matriz marca como não verificados os itens não demonstrados pelas fontes inspecionadas. Instruções contidas no DOCX histórico não foram tratadas como solicitação do pesquisador.
 - O uso de IA na elaboração de texto científico deve ser declarado segundo as regras do periódico escolhido; a IA não é autora e a responsabilidade pelo conteúdo permanece com os pesquisadores.
+
+## 27 de setembro de 2026 — novos documentos Word
+
+- A pedido do pesquisador, foi preparado um manuscrito em português com resumo em inglês e um documento separado de passos restantes. O artigo delimita a contribuição à avaliação crítica do benchmark, utiliza somente os resultados v4/v5/v6 e deixa autoria e declarações pessoais pendentes.
+- As quatro tabelas do Word são extraídas dos CSVs verificados, com validação de completude, suporte e intervalos S2. Fontes, gerador OOXML e hashes estão em manuscript/ e tools/build_article_documents.ps1. As referências próximas ao problema e as referências de RF, XGBoost e scikit-learn foram conferidas em fontes primárias.
+- Não houve novos ajustes de modelos, validação externa ou depósito público. A estrutura OOXML e a geometria das tabelas foram conferidas; a inspeção visual das páginas não foi realizada porque LibreOffice/soffice não está disponível. O texto e a paginação ainda exigem revisão humana antes da submissão.
+
+## 27 de setembro de 2026 — comparação de latência ampliada
+
+- Após o pedido de comparar mais modelos, foram congelados cinco artefatos com hiperparâmetros da baseline v1, somente para custo. O painel inclui regressão logística, MLP compacta, XGBoost, Random Forest e Extra Trees; mantém os 18 atributos e cinco classes.
+- O Docker Desktop foi iniciado. A v3 mediu três modelos e registrou OOM de RF/Extra Trees. A v4 corrigiu a cópia completa do pickle no carregador e fixou uma thread de inferência sob 0,5 CPU/512 MiB sem swap. Foram medidos quatro modelos; Extra Trees continuou com OOM. Todos os candidatos foram tentados; não se inventou latência para falha de carregamento.
+- Foi corrigida a leitura UTF-8 dos logs Docker no Windows, que apresentou uma exceção de decodificação durante o build v3. A imagem v3 foi construída e a medição prosseguiu; v4 não apresentou essa exceção.
+- A verificação confirmou quotas, thread, hashes, contagens e igualdade exata das entradas individuais entre modelos. A suíte concluiu 55 testes com OK. Resultados e limites em protocol/latency_results_20260927.md. Não houve teste em ARM, voo, energia ou coleta online. O manuscrito Word não recebeu automaticamente esses resultados complementares.

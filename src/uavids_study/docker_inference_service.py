@@ -61,7 +61,16 @@ class InferenceState:
 
         load_start_ns = time.perf_counter_ns()
         # The pickle is trusted because it was generated locally and hash-checked.
-        self.model = pickle.loads(self.model_path.read_bytes())
+        # Avoid holding an additional complete serialized model in RAM.
+        with self.model_path.open("rb") as stream:
+            self.model = pickle.load(stream)
+        self.runtime_threads = int(os.environ.get("MODEL_THREADS", "4"))
+        if self.runtime_threads < 1:
+            raise ValueError("MODEL_THREADS must be positive")
+        runtime_jobs = {key: self.runtime_threads for key in self.model.get_params(deep=True)
+                        if key == "n_jobs" or key.endswith("__n_jobs")}
+        if runtime_jobs:
+            self.model.set_params(**runtime_jobs)
         self.load_ns = time.perf_counter_ns() - load_start_ns
         self.feature_count = len(self.schema["features"])
         self.class_count = len(self.schema["class_order"])
@@ -83,6 +92,7 @@ class InferenceState:
             "class_count": self.class_count,
             "class_order": self.schema["class_order"],
             "load_ns": self.load_ns,
+            "runtime_threads": self.runtime_threads,
             "pid": os.getpid(),
         }
 

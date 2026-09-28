@@ -1,0 +1,42 @@
+{
+    "benchmark_id":  "docker_latency_v3",
+    "artifact_set_id":  "deployment_latency_v2",
+    "image_tag":  "uavids-inference:docker-latency-v3",
+    "container_port":  8000,
+    "host_port":  18080,
+    "cpu_limit":  0.5,
+    "memory_limit":  "512m",
+    "model_threads":  4,
+    "random_seed":  20260907,
+    "startup_timeout_seconds":  120,
+    "request_timeout_seconds":  30,
+    "warmup_calls":  200,
+    "repetitions":  5,
+    "individual_calls_per_repetition":  1000,
+    "batch_sizes":  [
+                        1,
+                        32,
+                        256,
+                        1024
+                    ],
+    "batch_calls_per_repetition":  30,
+    "throughput_concurrency":  [
+                                   1,
+                                   4,
+                                   8
+                               ],
+    "throughput_requests_per_repetition":  300,
+    "resource_sample_interval_seconds":  0.5,
+    "models":  [
+                   "logistic_regression",
+                   "mlp_compact",
+                   "xgboost",
+                   "random_forest",
+                   "extra_trees"
+               ],
+    "paired_inputs":  true,
+    "include_legacy_quality":  false,
+    "continue_on_model_failure":  true,
+    "dockerfile":  "Dockerfile.benchmark",
+    "disable_swap":  true
+}

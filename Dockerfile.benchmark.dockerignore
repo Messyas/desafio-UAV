@@ -1,0 +1,12 @@
+*
+!Dockerfile.benchmark
+!requirements-docker.txt
+!src/
+!src/uavids_study/
+!src/uavids_study/docker_inference_service.py
+!artifacts/
+!artifacts/models/
+!artifacts/models/deployment_latency_v2/
+!artifacts/models/deployment_latency_v2/manifest.json
+!artifacts/models/deployment_latency_v2/schema.json
+!artifacts/models/deployment_latency_v2/*.pkl
